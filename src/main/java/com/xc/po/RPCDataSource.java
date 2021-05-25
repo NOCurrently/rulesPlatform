@@ -10,14 +10,10 @@ import lombok.Data;
  * @return $
  **/
 @Data
-public class RPCDataSource {
+public class RPCDataSource extends DataSource{
 
     private String service;
     private String method;
     private String token;
     private String alise;
-    private String paramTemplate;
-    private String resultExtract;
-    private Integer timeout;
-    private String backup;
 }
