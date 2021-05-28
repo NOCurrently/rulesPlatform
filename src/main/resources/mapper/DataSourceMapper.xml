@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.datasource.mapper.DataSourceMapper">
+    <resultMap id="BaseResultMap" type="com.datasource.po.DataSource">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="timeout" jdbcType="TINYINT" property="timeout"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="param_template" jdbcType="VARCHAR" property="paramTemplate"/>
+        <result column="result_extract" jdbcType="VARCHAR" property="resultExtract"/>
+        <result column="backup" jdbcType="VARCHAR" property="backup"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="headers" jdbcType="VARCHAR" property="headers"/>
+        <result column="request_type" jdbcType="TINYINT" property="requestType"/>
+        <result column="data_type" jdbcType="TINYINT" property="dataType"/>
+
+        <result column="service" jdbcType="VARCHAR" property="service"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="token" jdbcType="VARCHAR" property="token"/>
+        <result column="alise" jdbcType="VARCHAR" property="alise"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, timeout, type, param_template, result_extract, backup, url, headers, request_type, data_type,
+    service, method, token, alise,status, update_by, create_by,
+    create_time, update_time
+  </sql>
+    <!--<resultMap id="ContentResult" type="com.oyo.cms.dal.po.custom.ContentAggregatePO" extends="BaseResultMap">
+        <association property="appExtend" javaType="com.oyo.cms.dal.po.ContentAppExtend"
+                     resultMap="com.oyo.cms.dal.mapper.mysql.ContentAppExtendMapper.BaseResultMap" columnPrefix="a_">
+        </association>
+        <collection property="imgUrl" ofType="java.lang.String" javaType="ArrayList">
+            <result column="img_url"/>
+        </collection>
+    </resultMap>
+    <sql id="Aggregate_Column_List">
+    ci.id,  ci.menu_id,  ci.title,  ci.sub_title,ci.target_user,ci.channel , ci.tag,  ci.code,  ci.jump_type,
+    ci.jump_url,  ci.custom_param,  ci.priority, ci.remarks,  ci.time_status,  ci.status, ci.target_crowd_id,
+    cae.id a_id, cae.activity_code a_activity_code, cae.simple_desc a_simple_desc, cae.back_color a_back_color,
+    cae.info_id a_info_id, cae.time_type a_time_type, cae.time_out a_time_out, cae.display_type a_display_type, cae.display_times a_display_times,
+    cim.img_url img_url
+  </sql>
+    <select id="selectByIds" resultMap="ContentResult">
+        select
+        <include refid="Aggregate_Column_List"/>
+        from data_source
+        left join content_app_extend cae on cae.info_id=ci.id and cae.is_delete=0
+        left join content_img cim on cim.info_id=ci.id and cim.is_delete=0
+        where ci.id in
+        <foreach collection="infoIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+       order by ci.priority desc,ci.id desc
+    </select>-->
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from data_source
+        where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status=1
+    </select>
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from data_source
+        where id =#{id,jdbcType=INTEGER}
+        and status=1
+    </select>
+    <delete id="delete" parameterType="java.lang.Integer">
+    delete from data_source
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.datasource.po.DataSource" useGeneratedKeys="true" keyProperty="id">
+    insert into data_source
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="timeout != null">
+          timeout,
+      </if>
+      <if test="type != null">
+          type,
+      </if>
+      <if test="paramTemplate != null">
+          param_template,
+      </if>
+      <if test="resultExtract != null">
+          result_extract,
+      </if>
+      <if test="backup != null">
+          backup,
+      </if>
+      <if test="url != null">
+          url,
+      </if>
+      <if test="headers != null">
+          headers,
+      </if>
+      <if test="requestType != null">
+          request_type,
+      </if>
+      <if test="dataType != null">
+          data_type,
+      </if>
+      <if test="service != null">
+          service,
+      </if>
+      <if test="method != null">
+          method,
+      </if>
+      <if test="token != null">
+          token,
+      </if>
+      <if test="updateBy != null">
+          update_by,
+      </if>
+      <if test="createBy != null">
+          create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="timeout != null">
+        #{timeout},
+      </if>
+      <if test="type != null">
+        #{type},
+      </if>
+      <if test="paramTemplate != null">
+        #{paramTemplate},
+      </if>
+      <if test="resultExtract != null">
+        #{resultExtract},
+      </if>
+      <if test="backup != null">
+        #{backup},
+      </if>
+      <if test="url != null">
+        #{url},
+      </if>
+      <if test="headers != null">
+        #{headers},
+      </if>
+      <if test="requestType != null">
+        #{requestType},
+      </if>
+      <if test="dataType != null">
+        #{dataType},
+      </if>
+      <if test="service != null">
+        #{service},
+      </if>
+      <if test="method != null">
+        #{method},
+      </if>
+      <if test="token != null">
+        #{token},
+      </if>
+      <if test="alise != null">
+        #{alise},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy},
+      </if>
+      <if test="createBy != null">
+        #{createBy},
+      </if>
+    </trim>
+  </insert>
+    <update id="update" parameterType="com.datasource.po.DataSource">
+    update data_source
+     set timeout=#{timeout},
+      type=#{type},
+      param_template=#{paramTemplate},
+      result_extract=#{resultExtract},
+      backup=#{backup},
+      url=#{url},
+      headers=#{headers},
+      request_type=#{requestType},
+      data_type=#{dataType},
+      service=#{service},
+      method=#{method},
+      token=#{token},
+      alise=#{alise},
+      status=#{status},
+      update_by=#{updateBy}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

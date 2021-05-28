@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.datasource.mapper.AggregatDataSourceMapper">
+    <resultMap id="BaseResultMap" type="com.datasource.po.AggregatDataSource">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="ds_id" jdbcType="INTEGER" property="dsId"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="aggregat_key" jdbcType="VARCHAR" property="aggregatKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, ds_id, parent_id,status, update_by, create_by,create_time, update_time,aggregat_key
+  </sql>
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aggregat_data_source
+        where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status=1
+    </select>
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aggregat_data_source
+        where id =#{id,jdbcType=INTEGER}
+        and status=1
+    </select>
+    <select id="selectByKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from aggregat_data_source
+        where aggregat_key =#{key}
+        and status=1
+    </select>
+    <delete id="delete" parameterType="java.lang.Integer">
+    delete from aggregat_data_source
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.datasource.po.AggregatDataSource" useGeneratedKeys="true" keyProperty="id">
+    insert into aggregat_data_source
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dsId != null">
+          ds_id,
+      </if>
+      <if test="parentId != null">
+          parent_id,
+      </if>
+      <if test="aggregatKey != null">
+          aggregat_key,
+      </if>
+      <if test="updateBy != null">
+          update_by,
+      </if>
+      <if test="createBy != null">
+          create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dsId != null">
+        #{dsId},
+      </if>
+      <if test="parentId != null">
+        #{parentId},
+      </if>
+      <if test="aggregatKey != null">
+        #{aggregatKey},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy},
+      </if>
+      <if test="createBy != null">
+        #{createBy},
+      </if>
+    </trim>
+  </insert>
+    <update id="update" parameterType="com.datasource.po.AggregatDataSource">
+    update aggregat_data_source
+     set ds_id=#{dsId},
+     parent_id=#{parentId},
+     status=#{status},
+     update_by=#{updateBy}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>
