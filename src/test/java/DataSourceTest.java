@@ -1,7 +1,7 @@
-import com.datasource.constant.ConstantType;
-import com.datasource.po.DataSource;
-import com.datasource.service.DataSourceService;
-import com.datasource.until.JsonUtil;
+import com.xc.constant.ConstantType;
+import com.xc.po.DataSource;
+import com.xc.datasouce.service.DataSourceService;
+import com.xc.until.JsonUtil;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -49,7 +49,7 @@ public class DataSourceTest {
         param.put("redirect_url", "https://tech.youzan.com/rule-config-platform/");
         param.put("callback", "jQuery33102952066645850704_1621998345778");
         param.put("_", "1621996728157");
-        Map<String, Object> execute = httpService.execute(httpDataSource, param);
+        Map<String, Object> execute = httpService.requestService(httpDataSource, param);
         System.out.println(JsonUtil.write2JsonStr(param));
         System.out.println(execute);
     }

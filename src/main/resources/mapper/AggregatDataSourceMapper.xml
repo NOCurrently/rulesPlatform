@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.datasource.mapper.AggregatDataSourceMapper">
-    <resultMap id="BaseResultMap" type="com.datasource.po.AggregatDataSource">
+<mapper namespace="com.xc.mapper.AggregatDataSourceMapper">
+    <resultMap id="BaseResultMap" type="com.xc.po.AggregatDataSource">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="ds_id" jdbcType="INTEGER" property="dsId"/>
         <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
@@ -43,7 +43,7 @@
     delete from aggregat_data_source
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.datasource.po.AggregatDataSource" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.xc.po.AggregatDataSource" useGeneratedKeys="true" keyProperty="id">
     insert into aggregat_data_source
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="dsId != null">
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-    <update id="update" parameterType="com.datasource.po.AggregatDataSource">
+    <update id="update" parameterType="com.xc.po.AggregatDataSource">
     update aggregat_data_source
      set ds_id=#{dsId},
      parent_id=#{parentId},

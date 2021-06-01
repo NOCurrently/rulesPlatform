@@ -1,0 +1,34 @@
+package com.xc.po;
+
+import java.util.Date;
+
+import lombok.Data;
+/**
+ * 字典值pojo
+ *
+ * @author 肖超
+ * @date: 2019年5月2日
+ */
+@Data
+public class DictValue{
+
+	private Integer id;
+
+    private String code;
+
+    private String name;
+
+    private Integer typeId;
+
+    private Integer sort;
+
+    private Integer status;
+    private String createBy;
+    private String updateBy;
+    private Date createTime;
+    private Date updateTime;
+
+    private String remarks;
+
+   
+}

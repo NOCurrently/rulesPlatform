@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.datasource.mapper.DataSourceMapper">
-    <resultMap id="BaseResultMap" type="com.datasource.po.DataSource">
+<mapper namespace="com.xc.mapper.DataSourceMapper">
+    <resultMap id="BaseResultMap" type="com.xc.po.DataSource">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="timeout" jdbcType="TINYINT" property="timeout"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
@@ -77,7 +77,7 @@
     delete from data_source
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.datasource.po.DataSource" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.xc.po.DataSource" useGeneratedKeys="true" keyProperty="id">
     insert into data_source
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="timeout != null">
@@ -171,7 +171,7 @@
       </if>
     </trim>
   </insert>
-    <update id="update" parameterType="com.datasource.po.DataSource">
+    <update id="update" parameterType="com.xc.po.DataSource">
     update data_source
      set timeout=#{timeout},
       type=#{type},
