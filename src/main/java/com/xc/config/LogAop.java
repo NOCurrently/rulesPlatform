@@ -45,46 +45,46 @@ public class LogAop {
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         Object proceed = pjp.proceed();
         try {
-            MethodSignature signature = (MethodSignature) pjp.getSignature();
-            Method method = signature.getMethod();
-            Log log = method.getAnnotation(Log.class);
-
-            if (log != null) {
-                OperationLog operationLog = new OperationLog();
-                String className = pjp.getTarget().getClass().getName();
-                String methodName = method.getName();
-                operationLog.setUrl(className + "#" + methodName);
-                operationLog.setCreateBy(SsoUtil.getUserName());
-                Map<String, Object> data = new HashMap<>();
-                data.put("param", pjp.getArgs());
-                data.put("result", proceed);
-                // 数据
-                operationLog.setOperationData(JsonUtil.write2JsonStr(data));
-
-                operationLog.setType(log.type());
-                // 异步
-                poolExecutor.submit(new PrivateTask(operationLog));
-
-            }
+            // 异步
+            poolExecutor.submit(new PrivateTask(pjp,proceed));
         } catch (Exception e) {
             logger.error("insert log fail ,Exception ", e);
         }
-
         return proceed;
     }
 
     class PrivateTask implements Runnable {
 
-        private OperationLog operationLog;
+        private ProceedingJoinPoint pjp;
+        private Object proceed;
 
-        public PrivateTask(OperationLog operationLog) {
-            this.operationLog = operationLog;
+        public PrivateTask(ProceedingJoinPoint pjp, Object proceed) {
+            this.pjp = pjp;
+            this.proceed = proceed;
         }
 
         @Override
         public void run() {
             try {
-                logService.insertSelective(operationLog);
+                MethodSignature signature = (MethodSignature) pjp.getSignature();
+                Method method = signature.getMethod();
+                Log log = method.getAnnotation(Log.class);
+
+                if (log != null) {
+                    OperationLog operationLog = new OperationLog();
+                    String className = pjp.getTarget().getClass().getName();
+                    String methodName = method.getName();
+                    operationLog.setUrl(className + "#" + methodName);
+                    operationLog.setCreateBy(SsoUtil.getUserName());
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("param", pjp.getArgs());
+                    data.put("result", proceed);
+                    // 数据
+                    operationLog.setOperationData(JsonUtil.write2JsonStr(data));
+
+                    operationLog.setType(log.type());
+                    logService.insertSelective(operationLog);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

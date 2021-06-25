@@ -11,6 +11,11 @@
         <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
     </properties>
 <dependencies>
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.70</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
     <dependency>
         <groupId>javax.validation</groupId>

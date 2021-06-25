@@ -1,5 +1,9 @@
 package com.xc.datasouce.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.xc.constant.ConstantType;
 import com.xc.po.DataSource;
 import com.xc.until.HttpUtil;
@@ -14,7 +18,9 @@ import org.apache.dubbo.rpc.service.GenericException;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +55,32 @@ public class ExternalService {
         return result;
     }
 
+    public static void main(String[] args) {
+        String a = "[List[124,32,4,32],5L,\"fda\",{\"deliveryType\":\"${deliveryType}\",\"id\":\"${id}\",\"class\":\"com.jd.deliveryTransition.model.DeliveryDynamicFlow\"}]";
+        List<Object> paramList = JSON.parseArray(a, Object.class);
+        System.out.println();
+        List<String> parameterTypes = new ArrayList<>();
+        List<Object> parameter = new ArrayList<>();
+        for (Object params : paramList) {
+            String clazz = null;
+            System.out.println(params.getClass().getName());
+            if (params instanceof JSONObject) {
+                clazz = (String) ((JSONObject) params).get("class");
+                if (clazz == null) {
+                    clazz = Map.class.getName();
+                }
+            } else if (params instanceof JSONArray) {
+                clazz = List.class.getName();
+            } else {
+                clazz = params.getClass().getName();
+            }
+            parameterTypes.add(clazz);
+            parameter.add(params);
+        }
+        System.out.println(parameterTypes);
+        System.out.println(parameter);
+    }
+
     public String requestRPCService(DataSource dataSource, String requestParam) {
         try {
             ReferenceConfig<GenericService> referenceConfig = new ReferenceConfig<>();
@@ -65,12 +97,26 @@ public class ExternalService {
 
             List<String> parameterTypes = new ArrayList<>();
             List<Object> parameter = new ArrayList<>();
-            List<Map<String, Object>> paramList = JsonUtil.jsonArray2List(requestParam);
-            for (Map<String, Object> params : paramList) {
-                String clazz = (String) params.get("class");
+
+            List<Object> paramList = JSON.parseArray(requestParam, Object.class);
+            for (Object params : paramList) {
+                String clazz = null;
+                System.out.println(params.getClass().getName());
+                if (params instanceof JSONObject) {
+                    clazz = (String) ((JSONObject) params).get("class");
+                    if (clazz == null) {
+                        clazz = Map.class.getName();
+                    }
+                } else if (params instanceof JSONArray) {
+                    clazz = List.class.getName();
+                } else {
+                    clazz = params.getClass().getName();
+                }
                 parameterTypes.add(clazz);
                 parameter.add(params);
             }
+            System.out.println(parameterTypes);
+            System.out.println(parameter);
             // 基本类型以及Date,List,Map等不需要转换，直接调用
             Object result = genericService.$invoke(dataSource.getMethod(), parameterTypes.toArray(new String[0]), parameter.toArray());
             if (result != null) {
@@ -79,7 +125,7 @@ public class ExternalService {
                 }
                 return JsonUtil.write2JsonStr(result);
             }
-        } catch (GenericException e) {
+        } catch (Exception e) {
             log.error("referenceConfig GenericException", e);
         }
         return null;

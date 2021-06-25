@@ -45,6 +45,7 @@ public class SsoFilter extends HttpServlet implements Filter {
                 String requestURI = req.getRequestURI();
                 if (requestURI.startsWith("/xiaochao")) {
                     forbiddenResponse(res, WebResponse.fail("444", "没登录!"));
+                    return;
                 }
             }
             chain.doFilter(request, response);

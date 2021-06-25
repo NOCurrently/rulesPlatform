@@ -45,7 +45,6 @@ public class VerifyAop {
                         List<String> resultList = violationSet.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
 						return WebResponse.fail("9999", JsonUtil.write2JsonStr(resultList));
 					}
-					continue;
 				}
 			}
 		}
