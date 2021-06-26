@@ -1,13 +1,10 @@
 package com.xc.config;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.xc.annotation.Log;
 import com.xc.po.OperationLog;
 import com.xc.datasouce.service.OperationLogService;
 import com.xc.until.JsonUtil;
 import com.xc.until.SsoUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -80,7 +75,7 @@ public class LogAop {
                     data.put("param", pjp.getArgs());
                     data.put("result", proceed);
                     // 数据
-                    operationLog.setOperationData(JsonUtil.write2JsonStr(data));
+                    operationLog.setOperationData(JsonUtil.toJSONString(data));
 
                     operationLog.setType(log.type());
                     logService.insertSelective(operationLog);

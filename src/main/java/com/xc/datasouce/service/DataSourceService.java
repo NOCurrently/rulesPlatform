@@ -1,9 +1,8 @@
 package com.xc.datasouce.service;
 
 import com.xc.po.DataSource;
-import com.xc.until.EasyUtils;
-import com.xc.until.JsonUtil;
 import com.jayway.jsonpath.JsonPath;
+import com.xc.until.JsonUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,7 @@ public class DataSourceService {
         if (param == null) {
             param = new HashMap<>();
         }
-        Map<String, String> collect = param.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> JsonUtil.write2JsonStr(item.getValue())));
+        Map<String, String> collect = param.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> JsonUtil.toJSONString(item.getValue())));
 
         String requestParam = null;
         if (StringUtils.isNotBlank(paramTemplate)) {
@@ -63,7 +62,7 @@ public class DataSourceService {
         }
         String resultExtract = dataSource.getResultExtract();
         if (StringUtils.isNotBlank(resultExtract)) {
-            Map<String, String> resultExtractMap = JsonUtil.json2MapString(resultExtract);
+            Map<String, String> resultExtractMap = JsonUtil.parseMapString(resultExtract);
             for (Map.Entry<String, String> entry : resultExtractMap.entrySet()) {
                 try {
                     Object extract = JsonPath.read(result, entry.getKey());

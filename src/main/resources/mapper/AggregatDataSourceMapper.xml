@@ -3,17 +3,16 @@
 <mapper namespace="com.xc.mapper.AggregatDataSourceMapper">
     <resultMap id="BaseResultMap" type="com.xc.po.AggregatDataSource">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="ds_id" jdbcType="INTEGER" property="dsId"/>
-        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="process_segment_json" jdbcType="VARCHAR" property="processSegmentJson"/>
+        <result column="depend_aggregat_ids" jdbcType="VARCHAR" property="dependAggregatIds"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="aggregat_key" jdbcType="VARCHAR" property="aggregatKey"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, ds_id, parent_id,status, update_by, create_by,create_time, update_time,aggregat_key
+    id, process_segment_json, depend_aggregat_ids,status, update_by, create_by,create_time, update_time
   </sql>
     <select id="selectByIds" resultMap="BaseResultMap">
         select
@@ -32,13 +31,6 @@
         where id =#{id,jdbcType=INTEGER}
         and status=1
     </select>
-    <select id="selectByKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from aggregat_data_source
-        where aggregat_key =#{key}
-        and status=1
-    </select>
     <delete id="delete" parameterType="java.lang.Integer">
     delete from aggregat_data_source
     where id = #{id,jdbcType=INTEGER}
@@ -46,14 +38,11 @@
   <insert id="insert" parameterType="com.xc.po.AggregatDataSource" useGeneratedKeys="true" keyProperty="id">
     insert into aggregat_data_source
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="dsId != null">
-          ds_id,
+      <if test="processSegmentJson != null">
+          process_segment_json,
       </if>
-      <if test="parentId != null">
-          parent_id,
-      </if>
-      <if test="aggregatKey != null">
-          aggregat_key,
+      <if test="dependAggregatIds != null">
+          depend_aggregat_ids,
       </if>
       <if test="updateBy != null">
           update_by,
@@ -63,14 +52,11 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="dsId != null">
-        #{dsId},
+      <if test="processSegmentJson != null">
+        #{processSegmentJson},
       </if>
-      <if test="parentId != null">
-        #{parentId},
-      </if>
-      <if test="aggregatKey != null">
-        #{aggregatKey},
+      <if test="dependAggregatIds != null">
+        #{dependAggregatIds},
       </if>
       <if test="updateBy != null">
         #{updateBy},
@@ -82,8 +68,8 @@
   </insert>
     <update id="update" parameterType="com.xc.po.AggregatDataSource">
     update aggregat_data_source
-     set ds_id=#{dsId},
-     parent_id=#{parentId},
+     set process_segment_json=#{processSegmentJson},
+     depend_aggregat_ids=#{dependAggregatIds},
      status=#{status},
      update_by=#{updateBy}
     where id = #{id,jdbcType=INTEGER}

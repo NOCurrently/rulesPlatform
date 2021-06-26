@@ -1,18 +1,15 @@
 package com.xc.config;
 
-import com.google.common.collect.Sets;
 import com.xc.po.User;
 import com.xc.until.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
 
 /**
  * SSO登陆过滤器
@@ -60,7 +57,7 @@ public class SsoFilter extends HttpServlet implements Filter {
     private void forbiddenResponse(HttpServletResponse response, WebResponse ropResponse) throws IOException {
         response.setStatus(200);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().println(JsonUtil.write2JsonStr(ropResponse));
+        response.getWriter().println(JsonUtil.toJSONString(ropResponse));
 
     }
 

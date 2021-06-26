@@ -12,8 +12,8 @@ import java.util.Map;
  * @return $
  **/
 @Data
-public class ExecuteVo1 {
+public class AggregatDataVo {
 
-    private int id;
+    private Integer id;
     private Map<String ,Object> param;
 }

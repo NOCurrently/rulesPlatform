@@ -3,7 +3,7 @@ package com.xc.datasouce.controller;
 import com.xc.mapper.DataSourceMapper;
 import com.xc.po.DataSource;
 import com.xc.datasouce.service.DataSourceService;
-import com.xc.vo.ExecuteVo1;
+import com.xc.vo.DataSourceVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class DataSourceController {
 
     @RequestMapping(value = "/dataSourceService", method = RequestMethod.POST)
     @ApiOperation("dataSourceService")
-    public Map<String, Object> dataSourceService(@RequestBody ExecuteVo1 executeVo) {
+    public Map<String, Object> dataSourceService(@RequestBody DataSourceVo executeVo) {
         DataSource dataSource = dataSourceMapper.selectById(executeVo.getId());
 
         Map<String, Object> execute = dataSourceService.requestService(dataSource, executeVo.getParam());

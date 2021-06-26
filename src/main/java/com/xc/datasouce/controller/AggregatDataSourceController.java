@@ -1,10 +1,10 @@
 package com.xc.datasouce.controller;
 
 import com.xc.annotation.Log;
-import com.xc.datasouce.manage.DataSourceManage;
+import com.xc.datasouce.manage.ProcessSegmentManage;
 import com.xc.mapper.AggregatDataSourceMapper;
 import com.xc.po.AggregatDataSource;
-import com.xc.vo.ExecuteVo;
+import com.xc.vo.AggregatDataVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 @Api(description = "聚合数据源")
 @RestController
@@ -23,7 +24,7 @@ public class AggregatDataSourceController {
     @Autowired
     private AggregatDataSourceMapper aggregatDataSourceMapper;
     @Autowired
-    private DataSourceManage dataSourceManage;
+    private ProcessSegmentManage dataSourceManage;
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ApiOperation("插入聚合数据源")
@@ -46,8 +47,15 @@ public class AggregatDataSourceController {
 
     @RequestMapping(value = "/execute", method = RequestMethod.POST)
     @ApiOperation("执行聚合数据源")
-    public Map<String, Object> execute(@RequestBody ExecuteVo executeVo) {
-        Map<String, Object> map = dataSourceManage.executeDataSource(executeVo.getKey(), executeVo.getParam());
+    public Map<String, Object> execute(@RequestBody AggregatDataVo executeVo) {
+        Map<String, Object> map = null;
+        try {
+            map = dataSourceManage.executeProcess(executeVo.getId(), executeVo.getParam());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println(executeVo.getParam());
         return map;
     }

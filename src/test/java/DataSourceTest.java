@@ -32,13 +32,13 @@ public class DataSourceTest {
         paramTemplateMap.put("redirect_url", "${redirect_url}");
         paramTemplateMap.put("callback", "${callback}");
         paramTemplateMap.put("_", "${_}");
-        String paramTemplate = JsonUtil.write2JsonStr(paramTemplateMap);
+        String paramTemplate = JsonUtil.toJSONString(paramTemplateMap);
         System.out.println(paramTemplate);
         httpDataSource.setParamTemplate(paramTemplate);
 
         Map<String, String> resultExtract = new HashMap<>();
         resultExtract.put("data.appId", "xc");
-        String resultExtract1 = JsonUtil.write2JsonStr(resultExtract);
+        String resultExtract1 = JsonUtil.toJSONString(resultExtract);
         System.out.println(resultExtract1);
         httpDataSource.setResultExtract(resultExtract1);
         DataSourceService httpService = new DataSourceService();
@@ -50,7 +50,7 @@ public class DataSourceTest {
         param.put("callback", "jQuery33102952066645850704_1621998345778");
         param.put("_", "1621996728157");
         Map<String, Object> execute = httpService.requestService(httpDataSource, param);
-        System.out.println(JsonUtil.write2JsonStr(param));
+        System.out.println(JsonUtil.toJSONString(param));
         System.out.println(execute);
     }
 }

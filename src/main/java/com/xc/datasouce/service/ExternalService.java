@@ -3,7 +3,6 @@ package com.xc.datasouce.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.xc.constant.ConstantType;
 import com.xc.po.DataSource;
 import com.xc.until.HttpUtil;
@@ -14,13 +13,11 @@ import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.utils.ReferenceConfigCache;
-import org.apache.dubbo.rpc.service.GenericException;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +53,7 @@ public class ExternalService {
     }
 
     public static void main(String[] args) {
-        String a = "[List[124,32,4,32],5L,\"fda\",{\"deliveryType\":\"${deliveryType}\",\"id\":\"${id}\",\"class\":\"com.jd.deliveryTransition.model.DeliveryDynamicFlow\"}]";
+        String a = "[[124,32,4,32],5L,\"fda\",{\"deliveryType\":\"${deliveryType}\",\"id\":\"${id}\",\"class\":\"com.jd.deliveryTransition.model.DeliveryDynamicFlow\"}]";
         List<Object> paramList = JSON.parseArray(a, Object.class);
         System.out.println();
         List<String> parameterTypes = new ArrayList<>();

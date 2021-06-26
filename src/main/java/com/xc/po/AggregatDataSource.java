@@ -1,9 +1,7 @@
 package com.xc.po;
 
 import lombok.Data;
-
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Author xiaochao18
@@ -15,14 +13,11 @@ import java.util.List;
 @Data
 public class AggregatDataSource {
     private Integer id;
-    private Integer dsId;
-    private Integer parentId;
+    private String processSegmentJson;
     private Integer status;
-    private String aggregatKey;
+    private String dependAggregatIds;
     private String createBy;
     private String updateBy;
     private Date createTime;
     private Date updateTime;
-
-    private List<AggregatDataSource> subAds;
 }

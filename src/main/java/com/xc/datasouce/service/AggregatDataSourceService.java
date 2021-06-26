@@ -1,8 +1,13 @@
 package com.xc.datasouce.service;
 
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 import com.xc.mapper.DataSourceMapper;
 import com.xc.po.AggregatDataSource;
 import com.xc.po.DataSource;
+import com.xc.until.CommonUtils;
+import com.xc.until.JsonUtil;
+import com.xc.vo.ProcessSegment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,54 +33,54 @@ public class AggregatDataSourceService {
     @Autowired
     private DataSourceMapper dataSourceMapper;
 
-    public Map<String, Object> execute(List<AggregatDataSource> aggregatDataSources, Map<String, Object> param) {
-        Map<String, Object> result = new HashMap<>();
-        try {
-            Set<Integer> dsIds = aggregatDataSources.stream().map(AggregatDataSource::getDsId).collect(Collectors.toSet());
-            List<DataSource> dataSources = dataSourceMapper.selectByIds(dsIds);
-            Map<Integer, DataSource> sourceMap = dataSources.stream().collect(Collectors.toMap(DataSource::getId, a -> a, (k1, k2) -> k1));
+    public void execute(List<ProcessSegment> processSegments, Map<String, Object> param, Map<String, Object> resultMap) throws ExecutionException, InterruptedException {
+        Set<Integer> ids = processSegments.stream().map(ProcessSegment::getId).collect(Collectors.toSet());
+        List<DataSource> dataSources = dataSourceMapper.selectByIds(ids);
+        Map<Integer, DataSource> sourceMap = dataSources.stream().collect(Collectors.toMap(DataSource::getId, a -> a, (k1, k2) -> k1));
 
-            List<Future<Map<String, Object>>> futures = new ArrayList<>();
-            for (AggregatDataSource aggregatDataSource : aggregatDataSources) {
-                DataSource dataSource = sourceMap.get(aggregatDataSource.getDsId());
-                Future<Map<String, Object>> submit = poolExecutor.submit(new Task(dataSourceService, aggregatDataSource, dataSource, param));
-                futures.add(submit);
+        List<Future<Boolean>> futures = new ArrayList<>();
+        for (ProcessSegment processSegment : processSegments) {
+            DataSource dataSource = sourceMap.get(processSegment.getId());
+            if (dataSource == null) {
+                throw new RuntimeException("dataSource 不存在 id=" + processSegment.getId());
             }
-            for (Future<Map<String, Object>> future : futures) {
-                result.putAll(future.get());
-            }
-        } catch (Exception e) {
-            log.error("execute Exception", e);
+            Future<Boolean> submit = poolExecutor.submit(new Task(dataSource, param, resultMap));
+            futures.add(submit);
         }
-        return result;
+        for (Future<Boolean> future : futures) {
+            future.get();
+        }
+        List<ProcessSegment> segments = processSegments.stream().flatMap(a ->
+                a.getSub() == null ? new ArrayList<ProcessSegment>().stream() : a.getSub().stream()
+        ).collect(Collectors.toList());
+        if (segments == null || segments.isEmpty()) {
+            return;
+        }
+        execute(segments, param, resultMap);
     }
 
-
-    class Task implements Callable<Map<String, Object>> {
-        private AggregatDataSource aggregatDataSource;
-        private DataSourceService dataSourceService;
+    private class Task implements Callable<Boolean> {
         private DataSource dataSource;
         private Map<String, Object> param;
+        private Map<String, Object> resultMap;
 
-        Task(DataSourceService dataSourceService, AggregatDataSource aggregatDataSource, DataSource dataSource, Map<String, Object> param) {
-            this.dataSourceService = dataSourceService;
+        Task(DataSource dataSource, Map<String, Object> param, Map<String, Object> resultMap) {
             this.param = param;
-            this.aggregatDataSource = aggregatDataSource;
             this.dataSource = dataSource;
+            this.resultMap = resultMap;
         }
 
-
         @Override
-        public Map<String, Object> call() {
-            Map<String, Object> objectMap = dataSourceService.requestService(dataSource, param);
-            List<AggregatDataSource> subAds = aggregatDataSource.getSubAds();
-            if (subAds == null || subAds.isEmpty()) {
-                return objectMap;
-            }
-            param.putAll(objectMap);
-            Map<String, Object> execute = execute(subAds, param);
-            objectMap.putAll(execute);
-            return objectMap;
+        public Boolean call() {
+            Map<String, Object> map = new HashMap<>(param);
+            CommonUtils.printDifferenceMap(map, resultMap, this.getClass().getName() + "request1");
+            map.putAll(resultMap);
+
+            Map<String, Object> objectMap = dataSourceService.requestService(dataSource, map);
+
+            CommonUtils.printDifferenceMap(objectMap, resultMap, this.getClass().getName() + "request2");
+            resultMap.putAll(objectMap);
+            return true;
         }
     }
 }

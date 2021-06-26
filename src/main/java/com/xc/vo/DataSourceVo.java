@@ -12,8 +12,8 @@ import java.util.Map;
  * @return $
  **/
 @Data
-public class ExecuteVo {
+public class DataSourceVo {
 
-    private String key;
+    private Integer id;
     private Map<String ,Object> param;
 }
