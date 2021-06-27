@@ -7,7 +7,7 @@
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="operation_data" jdbcType="VARCHAR" property="operationData" />
+    <result column="operation_data" jdbcType="LONGVARCHAR" property="operationData" />
   </resultMap>
   <sql id="Base_Column_List">
     id, `type`, create_by, url, create_time, operation_data

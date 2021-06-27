@@ -12,8 +12,8 @@ public class CommonUtils {
     public static void printDifferenceMap(Map map1,Map map2,String message){
         MapDifference<String, Object> difference = Maps.difference(map1, map2);
         Map<String, MapDifference.ValueDifference<Object>> stringValueDifferenceMap = difference.entriesDiffering();
-        if (stringValueDifferenceMap != null) {
-            log.warn("{},有重复的key键  {}" , message,JsonUtil.toJSONString(stringValueDifferenceMap));
+        if (stringValueDifferenceMap != null&&!stringValueDifferenceMap.isEmpty()) {
+            log.warn("     {},有重复的key键  {}" , message,JsonUtil.toJSONString(stringValueDifferenceMap));
         }
     }
 }

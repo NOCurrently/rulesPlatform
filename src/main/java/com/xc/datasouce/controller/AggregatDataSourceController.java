@@ -56,7 +56,6 @@ public class AggregatDataSourceController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(executeVo.getParam());
         return map;
     }
 

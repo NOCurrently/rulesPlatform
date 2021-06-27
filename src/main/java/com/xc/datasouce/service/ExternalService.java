@@ -34,11 +34,11 @@ public class ExternalService {
         String headers = dataSource.getHeaders();
         Map<String, String> headersMap = null;
         if (StringUtils.isNotBlank(headers)) {
-            headersMap = JsonUtil.json2MapString(headers);
+            headersMap = JsonUtil.parseMapString(headers);
         }
         Integer dataType = dataSource.getDataType() == null ? 0 : dataSource.getDataType();
         if (dataType == ConstantType.DataType.PARAM) {
-            Map<String, String> stringObjectMap = JsonUtil.json2MapString(requestParam);
+            Map<String, String> stringObjectMap = JsonUtil.parseMapString(requestParam);
             Integer requestType = dataSource.getRequestType() == null ? 0 : dataSource.getRequestType();
             if (requestType == ConstantType.RequestType.POST) {
                 result = HttpUtil.doPost(dataSource.getUrl(), stringObjectMap, headersMap, null, dataSource.getTimeout());
@@ -52,31 +52,6 @@ public class ExternalService {
         return result;
     }
 
-    public static void main(String[] args) {
-        String a = "[[124,32,4,32],5L,\"fda\",{\"deliveryType\":\"${deliveryType}\",\"id\":\"${id}\",\"class\":\"com.jd.deliveryTransition.model.DeliveryDynamicFlow\"}]";
-        List<Object> paramList = JSON.parseArray(a, Object.class);
-        System.out.println();
-        List<String> parameterTypes = new ArrayList<>();
-        List<Object> parameter = new ArrayList<>();
-        for (Object params : paramList) {
-            String clazz = null;
-            System.out.println(params.getClass().getName());
-            if (params instanceof JSONObject) {
-                clazz = (String) ((JSONObject) params).get("class");
-                if (clazz == null) {
-                    clazz = Map.class.getName();
-                }
-            } else if (params instanceof JSONArray) {
-                clazz = List.class.getName();
-            } else {
-                clazz = params.getClass().getName();
-            }
-            parameterTypes.add(clazz);
-            parameter.add(params);
-        }
-        System.out.println(parameterTypes);
-        System.out.println(parameter);
-    }
 
     public String requestRPCService(DataSource dataSource, String requestParam) {
         try {
@@ -98,7 +73,6 @@ public class ExternalService {
             List<Object> paramList = JSON.parseArray(requestParam, Object.class);
             for (Object params : paramList) {
                 String clazz = null;
-                System.out.println(params.getClass().getName());
                 if (params instanceof JSONObject) {
                     clazz = (String) ((JSONObject) params).get("class");
                     if (clazz == null) {
@@ -112,15 +86,14 @@ public class ExternalService {
                 parameterTypes.add(clazz);
                 parameter.add(params);
             }
-            System.out.println(parameterTypes);
-            System.out.println(parameter);
+            log.error("requestRPCService parameterTypes ={} ,parameter ={}", parameterTypes,parameter);
             // 基本类型以及Date,List,Map等不需要转换，直接调用
             Object result = genericService.$invoke(dataSource.getMethod(), parameterTypes.toArray(new String[0]), parameter.toArray());
             if (result != null) {
                 if (result instanceof String) {
                     return (String) result;
                 }
-                return JsonUtil.write2JsonStr(result);
+                return JsonUtil.toJSONString(result);
             }
         } catch (Exception e) {
             log.error("referenceConfig GenericException", e);

@@ -28,9 +28,11 @@ public class DataSourceController {
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ApiOperation("插入数据源")
     public int insertDataSource(@RequestBody DataSource dataSource) {
-        String paramTemplate = dataSource.getParamTemplate();
-        if (!paramTemplate.startsWith("[")) {
-            dataSource.setParamTemplate("[" + paramTemplate + "]");
+        if (dataSource.getType()==0){
+            String paramTemplate = dataSource.getParamTemplate();
+            if (!paramTemplate.startsWith("[")) {
+                dataSource.setParamTemplate("[" + paramTemplate + "]");
+            }
         }
         return dataSourceMapper.insert(dataSource);
     }

@@ -2,6 +2,7 @@ package com.xc.datasouce.service;
 
 import com.xc.po.DataSource;
 import com.jayway.jsonpath.JsonPath;
+import com.xc.until.EasyUtils;
 import com.xc.until.JsonUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -33,7 +34,7 @@ public class DataSourceService {
         if (param == null) {
             param = new HashMap<>();
         }
-        Map<String, String> collect = param.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> JsonUtil.toJSONString(item.getValue())));
+        Map<String, String> collect = param.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> EasyUtils.toString(item.getValue())));
 
         String requestParam = null;
         if (StringUtils.isNotBlank(paramTemplate)) {
@@ -46,13 +47,14 @@ public class DataSourceService {
                 throw new RuntimeException("freemarker process template exception", e);
             }
         }
-        System.out.println(requestParam);
+        log.error("requestService requestParam {}", requestParam);
         String result = null;
         if (dataSource.getType() == 0) {
             result = externalService.requestRPCService(dataSource, requestParam);
         } else if (dataSource.getType() == 1) {
             result = externalService.requestHttpService(dataSource, requestParam);
         }
+        log.error("requestService result {}", result);
         if (result == null) {
             result = dataSource.getBackup();
         }

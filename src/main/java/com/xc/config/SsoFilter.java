@@ -40,10 +40,10 @@ public class SsoFilter extends HttpServlet implements Filter {
                 return;
             }else{
                 String requestURI = req.getRequestURI();
-                if (requestURI.startsWith("/xiaochao")) {
+                /*if (requestURI.startsWith("/xiaochao")) {
                     forbiddenResponse(res, WebResponse.fail("444", "没登录!"));
                     return;
-                }
+                }*/
             }
             chain.doFilter(request, response);
         } catch (Exception e) {
