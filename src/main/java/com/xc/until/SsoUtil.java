@@ -12,8 +12,11 @@ import com.xc.po.User;
  **/
 public class SsoUtil {
 
-    public static String getUserName(){
+    public static String getUserName() {
         User user = SsoFilter.sThreadLocal.get();
+        if (user == null) {
+            return null;
+        }
         return user.getName();
     }
 }

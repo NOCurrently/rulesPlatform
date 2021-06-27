@@ -47,6 +47,7 @@ public class AggregatDataSourceController {
 
     @RequestMapping(value = "/execute", method = RequestMethod.POST)
     @ApiOperation("执行聚合数据源")
+    @Log(type = "execute")
     public Map<String, Object> execute(@RequestBody AggregatDataVo executeVo) {
         Map<String, Object> map = null;
         try {

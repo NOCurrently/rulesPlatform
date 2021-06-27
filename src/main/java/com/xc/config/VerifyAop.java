@@ -9,6 +9,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import com.xc.annotation.Verify;
+import com.xc.until.CommonUtils;
 import com.xc.until.JsonUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -28,8 +29,6 @@ import org.springframework.util.CollectionUtils;
 @Component
 public class VerifyAop {
 
-	private static final Validator validator= Validation.buildDefaultValidatorFactory().getValidator();;
-
 	@Around("@within(org.springframework.stereotype.Controller) || @within(org.springframework.web.bind.annotation.RestController)")
 	public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
 		MethodSignature signature = (MethodSignature) pjp.getSignature();
@@ -40,10 +39,9 @@ public class VerifyAop {
 			for (Annotation annotations2 : annotations) {
 				if (annotations2 instanceof Verify) {
 					Object paramValue = args[paramIndex];
-					Set<ConstraintViolation<Object>> violationSet = validator.validate(paramValue);
-					if (violationSet != null && !CollectionUtils.isEmpty(violationSet)) {
-                        List<String> resultList = violationSet.stream().map(ConstraintViolation::getMessage).collect(Collectors.toList());
-						return WebResponse.fail("9999", JsonUtil.toJSONString(resultList));
+					List<String> validator = CommonUtils.validator(paramValue);
+					if (validator!=null&&!validator.isEmpty()){
+						return WebResponse.fail("9999", JsonUtil.toJSONString(validator));
 					}
 				}
 			}
