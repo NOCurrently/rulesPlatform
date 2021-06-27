@@ -1,6 +1,7 @@
 package com.xc.po;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ public class DataSource {
      * 通用参数
      */
     private Integer id;
+    @Length(min = 10000)
     private String paramTemplate;
     private String resultExtract;
     private Integer timeout;

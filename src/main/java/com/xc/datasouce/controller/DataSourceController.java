@@ -1,5 +1,7 @@
 package com.xc.datasouce.controller;
 
+import com.xc.annotation.Verify;
+import com.xc.config.WebResponse;
 import com.xc.mapper.DataSourceMapper;
 import com.xc.po.DataSource;
 import com.xc.datasouce.service.DataSourceService;
@@ -27,14 +29,15 @@ public class DataSourceController {
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     @ApiOperation("插入数据源")
-    public int insertDataSource(@RequestBody DataSource dataSource) {
+    public WebResponse insertDataSource(@RequestBody  DataSource dataSource) {
         if (dataSource.getType()==0){
             String paramTemplate = dataSource.getParamTemplate();
             if (!paramTemplate.startsWith("[")) {
                 dataSource.setParamTemplate("[" + paramTemplate + "]");
             }
         }
-        return dataSourceMapper.insert(dataSource);
+        int insert = dataSourceMapper.insert(dataSource);
+        return WebResponse.succeed(null);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
