@@ -10,7 +10,7 @@ import lombok.Data;
  * @return $
  **/
 @Data
-public class User {
+public class UserDO {
     private String name;
 
 }

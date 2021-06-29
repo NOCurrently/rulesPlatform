@@ -1,6 +1,6 @@
 package com.xc.config;
 
-import com.xc.po.User;
+import com.xc.po.UserDO;
 import com.xc.until.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +23,7 @@ public class SsoFilter extends HttpServlet implements Filter {
     public SsoFilter() {
     }
 
-    public static final ThreadLocal<User> sThreadLocal = new ThreadLocal<>();
+    public static final ThreadLocal<UserDO> sThreadLocal = new ThreadLocal<>();
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
 
@@ -33,7 +33,7 @@ public class SsoFilter extends HttpServlet implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             String auth = req.getHeader("auth");
             if (StringUtils.isNotBlank(auth)) {
-                User user = new User();
+                UserDO user = new UserDO();
                 user.setName(auth);
                 sThreadLocal.set(user);
                 chain.doFilter(request, response);

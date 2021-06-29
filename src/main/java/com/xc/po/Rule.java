@@ -6,12 +6,19 @@ import java.util.Date;
 
 @Data
 public class Rule {
+    private Integer id;
     private String name;
     private Integer type;
-    private int sort;
+    private Integer sort;
+    //规则列表
     private String expressionJsonList;
+    //执行逻辑
     private String executiveLogic;
+    //执行动作
     private String actionJsonList;
+    //数据源id
+    private Integer aggregatId;
+    private  String expectReturnClass;
     private Integer status;
     private String createBy;
     private String updateBy;

@@ -7,6 +7,9 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.serializer.JSONLibDataFormatSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.index.qual.SameLen;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,7 @@ import java.util.Map;
  * @author nachuan
  * @create 2019-04-28 18:10
  */
+@Slf4j
 public class JsonUtil {
 
     private static final SerializeConfig SERIALIZE_CONFIG;
@@ -52,10 +56,20 @@ public class JsonUtil {
      * @param object
      * @return
      */
-    public static String toJSONString(Object object) {
-        return JSON.toJSONString(object, SERIALIZE_CONFIG, features);
+    public static String toJSONString(Object object, String defaultStr) {
+        if (object == null) {
+            return defaultStr;
+        }
+        try {
+            return JSON.toJSONString(object, SERIALIZE_CONFIG, features);
+        } catch (Exception e) {
+            log.error("toJSONString Exception :" + object, e);
+        }
+        return defaultStr;
     }
-
+    public static String toJSONString(Object object) {
+        return  toJSONString(object,null);
+    }
     /**
      * json字符串转bean
      *
@@ -65,7 +79,15 @@ public class JsonUtil {
      * @return
      */
     public static <T> T parseObject(String text, Class<T> clazz) {
-        return JSON.parseObject(text, clazz);
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+        try {
+            return JSON.parseObject(text, clazz);
+        } catch (Exception e) {
+            log.error("parseObject Class Exception :" + text, e);
+        }
+        return null;
     }
 
     public static Map<String, String> parseMapString(String text) {
@@ -74,7 +96,15 @@ public class JsonUtil {
     }
 
     public static <T> T parseObject(String text, TypeReference<T> typeReference) {
-        return JSON.parseObject(text, typeReference);
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+        try {
+            return JSON.parseObject(text, typeReference);
+        } catch (Exception e) {
+            log.error("parseObject typeReference Exception :" + text, e);
+        }
+        return null;
     }
 
     /**
@@ -86,7 +116,15 @@ public class JsonUtil {
      * @return
      */
     public static <T> List<T> parseArray(String text, Class<T> clazz) {
-        return JSON.parseArray(text, clazz);
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+        try {
+            return JSON.parseArray(text, clazz);
+        } catch (Exception e) {
+            log.error("parseArray Exception :" + text, e);
+        }
+        return null;
     }
 
 }

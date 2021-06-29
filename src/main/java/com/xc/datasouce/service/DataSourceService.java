@@ -2,15 +2,18 @@ package com.xc.datasouce.service;
 
 import com.xc.po.DataSource;
 import com.jayway.jsonpath.JsonPath;
+import com.xc.until.CommonUtils;
 import com.xc.until.EasyUtils;
 import com.xc.until.JsonUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -23,11 +26,7 @@ public class DataSourceService {
     @Autowired
     private ExternalService externalService;
 
-    private final static Configuration configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 
-    static {
-        configuration.setNumberFormat("#");
-    }
 
     public Map<String, Object> requestService(DataSource dataSource, Map<String, Object> param) {
         String paramTemplate = dataSource.getParamTemplate();
@@ -39,10 +38,7 @@ public class DataSourceService {
         String requestParam = null;
         if (StringUtils.isNotBlank(paramTemplate)) {
             try {
-                Template template = new Template(null, new StringReader(paramTemplate), configuration);
-                StringWriter writer = new StringWriter();
-                template.process(collect, writer);
-                requestParam = writer.getBuffer().toString();
+                requestParam = CommonUtils.assemblyTemplate(paramTemplate, collect);
             } catch (Exception e) {
                 throw new RuntimeException("freemarker process template exception", e);
             }
@@ -76,5 +72,7 @@ public class DataSourceService {
         }
         return mappingResult;
     }
+
+
 
 }

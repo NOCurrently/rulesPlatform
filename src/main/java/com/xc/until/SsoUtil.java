@@ -1,7 +1,7 @@
 package com.xc.until;
 
 import com.xc.config.SsoFilter;
-import com.xc.po.User;
+import com.xc.po.UserDO;
 
 /**
  * @Author xiaochao18
@@ -13,7 +13,7 @@ import com.xc.po.User;
 public class SsoUtil {
 
     public static String getUserName() {
-        User user = SsoFilter.sThreadLocal.get();
+        UserDO user = SsoFilter.sThreadLocal.get();
         if (user == null) {
             return null;
         }

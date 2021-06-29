@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.mapper.RuleMapper">
+    <resultMap id="BaseResultMap" type="com.xc.po.Rule">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="expression_json_list" jdbcType="VARCHAR" property="expressionJsonList"/>
+        <result column="executive_logic" jdbcType="VARCHAR" property="executiveLogic"/>
+        <result column="action_json_list" jdbcType="VARCHAR" property="actionJsonList"/>
+        <result column="aggregat_id" jdbcType="INTEGER" property="aggregatId"/>
+        <result column="expect_return_class" jdbcType="VARCHAR" property="expectReturnClass"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, type, sort, expression_json_list, executive_logic, action_json_list, aggregat_id, expect_return_class,
+    status, update_by, create_by,create_time, update_time
+  </sql>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+        where id in
+        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and status=1
+    </select>
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule
+        where id =#{id,jdbcType=INTEGER}
+        and status=1
+    </select>
+    <insert id="insertSelective" parameterType="com.xc.po.Rule" useGeneratedKeys="true" keyProperty="id">
+        insert into rule
+
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+
+            <if test="expressionJsonList != null">
+                expression_json_list,
+            </if>
+            <if test="executiveLogic != null">
+                executive_logic,
+            </if>
+            <if test="actionJsonList != null">
+                action_json_list,
+            </if>
+            <if test="aggregatId != null">
+                aggregat_id,
+            </if>
+            <if test="expectReturnClass != null">
+                expect_return_class,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+
+            <if test="sort != null">
+                #{sort},
+            </if>
+            <if test="expressionJsonList != null">
+                #{expressionJsonList},
+            </if>
+            <if test="executiveLogic != null">
+                #{executiveLogic},
+            </if>
+            <if test="actionJsonList != null">
+                #{actionJsonList},
+            </if>
+            <if test="aggregatId != null">
+                #{aggregatId},
+            </if>
+            <if test="expectReturnClass != null">
+                #{expectReturnClass},
+            </if>
+
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xc.po.Rule">
+        update rule
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="sort != null">
+                sort=#{sort},
+            </if>
+            <if test="expressionJsonList != null">
+                expression_json_list=#{expressionJsonList},
+            </if>
+            <if test="executiveLogic != null">
+                executive_logic=#{executiveLogic},
+            </if>
+            <if test="actionJsonList != null">
+                action_json_list=#{actionJsonList},
+            </if>
+            <if test="aggregatId != null">
+                aggregat_id=#{aggregatId},
+            </if>
+            <if test="expectReturnClass != null">
+                expect_return_class=#{expectReturnClass},
+            </if>
+
+            <if test="updateBy != null">
+                update_by=#{updateBy}
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>
