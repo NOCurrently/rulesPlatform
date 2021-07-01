@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-06-29 15:47:40
+-- 生成日期： 2021-07-01 23:28:29
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -128,6 +128,13 @@ CREATE TABLE `rule` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- 转存表中的数据 `rule`
+--
+
+INSERT INTO `rule` (`id`, `name`, `type`, `sort`, `expression_json_list`, `executive_logic`, `action_json_list`, `aggregat_id`, `expect_return_class`, `status`, `update_by`, `create_by`, `create_time`, `update_time`) VALUES
+(1, '111', NULL, 0, '[{\"left\":\"namexc_returt\",\"operation\":\"!=\",\"right\":\"1\"},{\"left\":\"msg\",\"operation\":\"==\",\"right\":\"100\"}]', '1&&2', '[{\"topic\":\"xiaochao\",\"message\":\"fdafdsaf\"}]', 4, 'java.lang.Boolean', 1, 'string', 'string', '2021-06-29 22:32:31', '2021-06-29 23:26:26');
+
+--
 -- 转储表的索引
 --
 
@@ -181,7 +188,7 @@ ALTER TABLE `operation_log`
 -- 使用表AUTO_INCREMENT `rule`
 --
 ALTER TABLE `rule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
