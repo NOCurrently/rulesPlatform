@@ -14,30 +14,12 @@
     <result column="remarks" jdbcType="VARCHAR" property="remarks" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, type, code, name, is_delete, is_online, update_by, create_by, create_time, update_time, 
+    id, type, code, name, status, update_by, create_by, create_time, update_time,
     remarks
   </sql>
 
-  <select id="selectByCondition" resultMap="BaseResultMap" parameterType="com.xc.po.DictType">
-    select
-    <include refid="Base_Column_List" />
-    from dict_type
-    <where>
-      <if test="id != null ">AND id=#{id}</if>
-      <if test="code != null ">AND code=#{code}</if>
-      <if test="type != null ">AND type=#{type}</if>
-      <if test="name != null and name != '' ">AND name like concat(#{name},"%")</if>
-      <if test="status != null ">AND status=#{status}</if>
-      <if test="updateBy != null ">AND update_by=#{updateBy}</if>
-      <if test="createBy != null ">AND create_by=#{createBy}</if>
-      <if test="createTime != null ">AND create_time=#{createTime}</if>
-      <if test="updateTime != null ">AND update_time=#{updateTime}</if>
-    </where>
-    AND status = 1
-    order by id desc
-  </select>
-  
-  <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from dict_type
@@ -68,16 +50,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from dict_type
-    where id = #{id,jdbcType=INTEGER}  AND status = 1
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from dict_type
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <insert id="insertSelective" parameterType="com.xc.po.DictType">
     insert into dict_type
     <trim prefix="(" suffix=")" suffixOverrides=",">

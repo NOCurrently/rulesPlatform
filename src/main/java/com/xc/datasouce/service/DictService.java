@@ -1,15 +1,16 @@
 package com.xc.datasouce.service;
 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.xc.mapper.DictTypeMapper;
 import com.xc.mapper.DictValueMapper;
 import com.xc.po.DictType;
 import com.xc.po.DictValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 服务实现类
@@ -31,14 +32,15 @@ public class DictService {
      * @date: 2019年4月17日
      */
     public int insertType(DictType dictType) {
-        DictType selectByTypeCode = dictTypeMapper.selectByTypeCode(dictType.getCode());
+        DictType selectByTypeCode = dictTypeMapper.selectByCode(dictType.getCode());
         if (selectByTypeCode != null) {
-            return -1;
+            throw new RuntimeException(dictType.getCode() + "已存在");
         }
         return dictTypeMapper.insertSelective(dictType);
     }
 
     /**
+     * @param dictValue
      * @return
      * @author: 肖超
      * @date: 2019年4月17日
@@ -53,31 +55,16 @@ public class DictService {
      * @author: 肖超
      * @date: 2019年4月17日
      */
-    public List<DictValue> selectByTypeCode(String code) {
-        DictType dictType = dictTypeMapper.selectByTypeCode(code);
+    public List<DictValue> selectValueByCode(String code) {
+        DictType dictType = dictTypeMapper.selectByCode(code);
         if (dictType == null) {
             return new ArrayList<>(0);
         }
-        List<DictValue> poList = dictValueMapper.selectByTypeId(dictType.getId());
+        List<DictValue> poList = dictValueMapper.selectByTypeCode(code);
         if (poList == null) {
             return new ArrayList<>(0);
         }
         return poList;
-    }
-
-    /**
-     * 根据typeId查询所有字典值
-     *
-     * @param typeId
-     * @return
-     */
-    public List<DictValue> selectDictValuesByTypeId(Integer typeId) {
-        DictType dictType = dictTypeMapper.selectByPrimaryKey(typeId);
-        if (dictType == null) {
-            return new ArrayList<>(0);
-        }
-        List<DictValue> dictValues = dictValueMapper.selectByTypeId(typeId);
-        return dictValues;
     }
 
 
@@ -92,40 +79,13 @@ public class DictService {
     }
 
     /**
-     * @param dictValue1
+     * @param dictValue
      * @return
      * @author: 肖超
      * @date: 2019年4月17日
      */
     public int updateValue(DictValue dictValue) {
         return dictValueMapper.updateByPrimaryKeySelective(dictValue);
-    }
-
-
-
-
-    /**
-     * 条件查询字典类型
-     *
-     * @param dictType
-     * @return
-     */
-    public List<DictType> selectByCondition(DictType dictType) {
-        List<DictType> dictTypes = dictTypeMapper.selectByCondition(dictType);
-        return dictTypes;
-    }
-
-
-
-    /**
-     * @param valueId
-     * @return
-     * @author: 肖超
-     * @date: 2019年4月30日
-     */
-    public List<DictValue> selectByValueId(Set<Integer> valueId) {
-        List<DictValue> dictValue = dictValueMapper.selectByIds(valueId);
-        return dictValue;
     }
 
 }

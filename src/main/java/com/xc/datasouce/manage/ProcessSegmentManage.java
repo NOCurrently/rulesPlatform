@@ -5,7 +5,7 @@ import com.xc.po.AggregatDataSource;
 import com.xc.datasouce.service.AggregatDataSourceService;
 import com.xc.until.CommonUtils;
 import com.xc.until.JsonUtil;
-import com.xc.vo.ProcessSegment;
+import com.xc.po.ProcessSegmentDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +35,12 @@ public class ProcessSegmentManage {
 
     public Map<String, Object> executeProcess(Integer aggregatId, Map<String, Object> param) throws ExecutionException, InterruptedException {
         AggregatDataSource aggregatDataSource = aggregatDataSourceMapper.selectById(aggregatId);
-        List<ProcessSegment> processSegments = null;
+        List<ProcessSegmentDO> processSegmentDOS = null;
         if (aggregatDataSource == null || StringUtils.isBlank(aggregatDataSource.getProcessSegmentJson())) {
             throw new RuntimeException("aggregatId 不存在!");
         }
-        processSegments = JsonUtil.parseArray(aggregatDataSource.getProcessSegmentJson(), ProcessSegment.class);
-        if (processSegments == null || processSegments.isEmpty()) {
+        processSegmentDOS = JsonUtil.parseArray(aggregatDataSource.getProcessSegmentJson(), ProcessSegmentDO.class);
+        if (processSegmentDOS == null || processSegmentDOS.isEmpty()) {
             throw new RuntimeException("ProcessSegmentJson 不合法!");
         }
         Map<String, Object> resultMap = new HashMap<>();
@@ -63,7 +63,7 @@ public class ProcessSegmentManage {
             }
         }
         //处理请求
-        aggregatDataSourceService.execute(processSegments, param, resultMap);
+        aggregatDataSourceService.execute(processSegmentDOS, param, resultMap);
         return resultMap;
     }
 

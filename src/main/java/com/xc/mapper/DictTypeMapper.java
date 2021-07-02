@@ -13,15 +13,6 @@ import java.util.List;
  * @date: 2019年5月2日
  */
 public interface DictTypeMapper {
-	/**
-	 * 删除
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param id
-	 * @return
-	 */
-	int deleteByPrimaryKey(Integer id);
 
 
 	/**
@@ -34,15 +25,6 @@ public interface DictTypeMapper {
 	 */
 	int insertSelective(DictType record);
 
-	/**
-	 * 查找
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param id
-	 * @return
-	 */
-	DictType selectByPrimaryKey(Integer id);
 
 	/**
 	 * 增量修改
@@ -55,13 +37,6 @@ public interface DictTypeMapper {
 	int updateByPrimaryKeySelective(DictType record);
 
 
-	/**
-	 * 条件查询字典类型
-	 *
-	 * @param dictTypeParam
-	 * @return
-	 */
-	List<DictType> selectByCondition(DictType dictTypeParam);
 
 	/**
 	 * code查询
@@ -71,5 +46,5 @@ public interface DictTypeMapper {
 	 * @author: 肖超
 	 * @date: 2019年4月17日
 	 */
-	DictType selectByTypeCode(@Param("code") String code);
+	DictType selectByCode(@Param("code") String code);
 }

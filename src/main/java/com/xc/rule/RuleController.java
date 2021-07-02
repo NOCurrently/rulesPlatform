@@ -7,6 +7,7 @@ import com.xc.mapper.RuleMapper;
 import com.xc.po.DataSource;
 import com.xc.po.Rule;
 import com.xc.vo.DataSourceVo;
+import com.xc.vo.RuleResultVo;
 import com.xc.vo.RuleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -59,7 +60,7 @@ public class RuleController {
     public WebResponse execute(@RequestBody RuleVo ruleVo) throws Exception {
         Rule rule = ruleMapper.selectById(ruleVo.getId());
 
-        Object execute = ruleService.execute(rule, ruleVo.getParam(), true);
+        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true,true);
         return WebResponse.succeed(execute);
     }
 

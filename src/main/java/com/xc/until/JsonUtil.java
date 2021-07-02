@@ -3,14 +3,19 @@ package com.xc.until;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.DefaultJSONParser;
 import com.alibaba.fastjson.parser.ParserConfig;
+import com.alibaba.fastjson.parser.deserializer.ObjectDeserializer;
 import com.alibaba.fastjson.serializer.JSONLibDataFormatSerializer;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.StringCodec;
+import com.alibaba.fastjson.util.IdentityHashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.index.qual.SameLen;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +29,7 @@ import java.util.Map;
 public class JsonUtil {
 
     private static final SerializeConfig SERIALIZE_CONFIG;
+    private static final ParserConfig global = ParserConfig.global;
 
     static {
         SERIALIZE_CONFIG = new SerializeConfig();
@@ -31,8 +37,18 @@ public class JsonUtil {
         SERIALIZE_CONFIG.put(java.util.Date.class, new JSONLibDataFormatSerializer());
         // 使用和json-lib兼容的日期输出格式
         SERIALIZE_CONFIG.put(java.sql.Date.class, new JSONLibDataFormatSerializer());
-    }
+       /* IdentityHashMap<Type, ObjectDeserializer> deserializers = global.getDeserializers();
+        deserializers.put(String.class,new DateCompatibilityFormat());
+        ObjectDeserializer deserializer = global.getDeserializer(String.class);*/
 
+    }
+    /*@Slf4j
+    public static class DateCompatibilityFormat extends StringCodec {
+        @Override
+        public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
+            return super.deserialze(parser, clazz, fieldName);
+        }
+    }*/
     /**
      * 序列化
      */

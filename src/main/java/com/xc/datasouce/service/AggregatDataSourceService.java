@@ -1,13 +1,9 @@
 package com.xc.datasouce.service;
 
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
 import com.xc.mapper.DataSourceMapper;
-import com.xc.po.AggregatDataSource;
 import com.xc.po.DataSource;
 import com.xc.until.CommonUtils;
-import com.xc.until.JsonUtil;
-import com.xc.vo.ProcessSegment;
+import com.xc.po.ProcessSegmentDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,16 +29,16 @@ public class AggregatDataSourceService {
     @Autowired
     private DataSourceMapper dataSourceMapper;
 
-    public void execute(List<ProcessSegment> processSegments, Map<String, Object> param, Map<String, Object> resultMap) throws ExecutionException, InterruptedException {
-        Set<Integer> ids = processSegments.stream().map(ProcessSegment::getId).collect(Collectors.toSet());
+    public void execute(List<ProcessSegmentDO> processSegmentDOS, Map<String, Object> param, Map<String, Object> resultMap) throws ExecutionException, InterruptedException {
+        Set<Integer> ids = processSegmentDOS.stream().map(ProcessSegmentDO::getId).collect(Collectors.toSet());
         List<DataSource> dataSources = dataSourceMapper.selectByIds(ids);
         Map<Integer, DataSource> sourceMap = dataSources.stream().collect(Collectors.toMap(DataSource::getId, a -> a, (k1, k2) -> k1));
 
         List<Future<Boolean>> futures = new ArrayList<>();
-        for (ProcessSegment processSegment : processSegments) {
-            DataSource dataSource = sourceMap.get(processSegment.getId());
+        for (ProcessSegmentDO processSegmentDO : processSegmentDOS) {
+            DataSource dataSource = sourceMap.get(processSegmentDO.getId());
             if (dataSource == null) {
-                throw new RuntimeException("dataSource 不存在 id=" + processSegment.getId());
+                throw new RuntimeException("dataSource 不存在 id=" + processSegmentDO.getId());
             }
             Future<Boolean> submit = poolExecutor.submit(new Task(dataSource, param, resultMap));
             futures.add(submit);
@@ -50,8 +46,8 @@ public class AggregatDataSourceService {
         for (Future<Boolean> future : futures) {
             future.get();
         }
-        List<ProcessSegment> segments = processSegments.stream().flatMap(a ->
-                a.getSub() == null ? new ArrayList<ProcessSegment>().stream() : a.getSub().stream()
+        List<ProcessSegmentDO> segments = processSegmentDOS.stream().flatMap(a ->
+                a.getSub() == null ? new ArrayList<ProcessSegmentDO>().stream() : a.getSub().stream()
         ).collect(Collectors.toList());
         if (segments == null || segments.isEmpty()) {
             return;

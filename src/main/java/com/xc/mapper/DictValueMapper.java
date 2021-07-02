@@ -13,15 +13,6 @@ import java.util.Set;
  * @date: 2019年5月2日
  */
 public interface DictValueMapper {
-	/**
-	 * 删除
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param id
-	 * @return
-	 */
-	int deleteByPrimaryKey(Integer id);
 
 
 	/**
@@ -34,15 +25,6 @@ public interface DictValueMapper {
 	 */
 	int insertSelective(DictValue record);
 
-	/**
-	 * 主键查找
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param id
-	 * @return
-	 */
-	DictValue selectByPrimaryKey(Integer id);
 
 	/**
 	 * 在增量修改
@@ -63,17 +45,8 @@ public interface DictValueMapper {
 	 * @param typeId
 	 * @return
 	 */
-	List<DictValue> selectByTypeId(@Param("typeId") Integer typeId);
+	List<DictValue> selectByTypeCode(@Param("code") String code);
 
 
-	/**
-	 * 查找多个
-	 * 
-	 * @author: 肖超
-	 * @date: 2019年4月30日
-	 * @param ids
-	 * @return
-	 */
-	List<DictValue> selectByIds(@Param("ids") Set<Integer> ids);
 
 }

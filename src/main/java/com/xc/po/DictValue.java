@@ -14,11 +14,10 @@ public class DictValue{
 
 	private Integer id;
 
-    private String code;
+    private String typeCode;
 
     private String name;
-
-    private Integer typeId;
+    private String valueStr;
 
     private Integer sort;
 

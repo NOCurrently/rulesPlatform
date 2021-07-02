@@ -3,9 +3,9 @@
 <mapper namespace="com.xc.mapper.DictValueMapper">
     <resultMap id="BaseResultMap" type="com.xc.po.DictValue">
         <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="type_code" jdbcType="VARCHAR" property="typeCode"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="type_id" jdbcType="INTEGER" property="typeId"/>
+        <result column="value_str" jdbcType="VARCHAR" property="valueStr"/>
         <result column="sort" jdbcType="INTEGER" property="sort"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
@@ -15,33 +15,33 @@
         <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, code, name, type_id, sort, status, update_by, create_by, create_time,
+    id, type_code, name, value_str, sort, status, update_by, create_by, create_time,
     update_time, remarks
   </sql>
-    <select id="selectByTypeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="selectByTypeCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from dict_value where type_id = #{typeId,jdbcType=INTEGER} and status=1
+        from dict_value where type_code = #{code,jdbcType=VARCHAR} and status=1
         order by sort asc
     </select>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.xc.po.DictValue">
         update dict_value
         <set>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="typeCode != null">
+                type_code = #{typeCode,jdbcType=VARCHAR},
             </if>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
+            <if test="valueStr != null">
+                value_str = #{valueStr,jdbcType=VARCHAR},
+            </if>
             <if test="sort != null">
                 sort = #{sort,jdbcType=INTEGER},
             </if>
-            <if test="deleteFlag != null">
-                is_delete = #{deleteFlag,jdbcType=TINYINT},
-            </if>
-            <if test="onlineFlag != null">
-                is_online = #{onlineFlag,jdbcType=TINYINT},
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
             </if>
             <if test="updateBy != null">
                 update_by = #{updateBy,jdbcType=VARCHAR},
@@ -53,36 +53,17 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from dict_value
-        where id = #{id,jdbcType=INTEGER} and status=1
-    </select>
-    <select id="selectByIds" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from dict_value
-        where  status=1 and id in
-        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
-            #{item,jdbcType=INTEGER}
-        </foreach>
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from dict_value
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
     <insert id="insertSelective" parameterType="com.xc.po.DictValue">
         insert into dict_value
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="code != null">
-                code,
+            <if test="typeCode != null">
+                type_code,
             </if>
             <if test="name != null">
                 name,
             </if>
-            <if test="typeId != null">
-                type_id,
+            <if test="valueStr != null">
+                value_str,
             </if>
             <if test="sort != null">
                 sort,
@@ -104,14 +85,14 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="code != null">
-                #{code,jdbcType=VARCHAR},
+            <if test="typeCode != null">
+                #{typeCode,jdbcType=VARCHAR},
             </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
-            <if test="typeId != null">
-                #{typeId,jdbcType=INTEGER},
+            <if test="valueStr != null">
+                #{valueStr,jdbcType=VARCHAR},
             </if>
             <if test="sort != null">
                 #{sort,jdbcType=INTEGER},
