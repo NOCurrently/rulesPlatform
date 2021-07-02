@@ -46,7 +46,7 @@ public class RuleService {
             expectReturnClass = Class.forName(expectReturnClassStr);
         }
         if (expectReturnClass != null && (result == null || expectReturnClass != result.getClass())) {
-            log.warn("Expected return does not match actual return;  ExpectedClass={}, actual={}, actualClass={}", expectReturnClass, JsonUtil.toJSONString(result), result.getClass());
+            log.warn("Expected return does not match actual return;  ExpectedClass={}, actual={}, actualClass={}", expectReturnClass, JsonUtil.toJSONString(result), result == null ? null : result.getClass());
         }
 
         String actionJsonList = rule.getActionJsonList();
@@ -72,21 +72,28 @@ public class RuleService {
         List<ExpressionDO> expressionDOs = JsonUtil.parseArray(rule.getExpressionJsonList(), ExpressionDO.class);
         Map<String, String> map = new HashMap<>();
         if (expressionDOs != null) {
-            for (int i = 0; i < expressionDOs.size(); i++) {
-                ExpressionDO expressionDO = expressionDOs.get(i);
-                String expression = "(" + expressionDO.getLeft() + expressionDO.getOperation() + expressionDO.getRight() + ")";
-                Object execute = CommonUtils.expressRunner(expression, param, isPrintError);
-                if (idDebug) {
-                    Map<String, Object> errorMessage = new HashMap<>();
-                    errorMessage.put("expression", expression);
-                    errorMessage.put("index", i + 1);
-                    if (execute != null && execute instanceof Boolean && !(Boolean) execute) {
-                        errorMessage.put("msg", expressionDO.getMessage());
+            List<String> list = CommonUtils.getRegexStr(rule.getExecutiveLogic(), "#\\d{1,2}");
+            int size = expressionDOs.size();
+            for (String s : list) {
+                int index = EasyUtils.parseInt(s.substring(1)) - 1;
+                if (index >= 0 && index < size) {
+                    ExpressionDO expressionDO = expressionDOs.get(index);
+                    String expression = "(" + expressionDO.getLeft() + expressionDO.getOperation() + expressionDO.getRight() + ")";
+                    Object execute = CommonUtils.expressRunner(expression, param, isPrintError);
+                    if (idDebug) {
+                        Map<String, Object> errorMessage = new HashMap<>();
+                        errorMessage.put("expression", expression);
+                        errorMessage.put("index", index + 1);
+                        if (execute != null && execute instanceof Boolean && !(Boolean) execute) {
+                            errorMessage.put("msg", expressionDO.getMessage());
+                        }
+                        errorMessage.put("result", execute);
+                        debugMessage.add(errorMessage);
                     }
-                    errorMessage.put("result", execute);
-                    debugMessage.add(errorMessage);
+                    map.put("P" + (index + 1), EasyUtils.toString(execute));
+                } else {
+                    map.put("P" + (index + 1), s);
                 }
-                map.put("P" + (i + 1), EasyUtils.toString(execute));
             }
         }
         String sb = CommonUtils.stringAppend(rule.getExecutiveLogic(), "#\\d{1,2}", "${P", "}", "#");

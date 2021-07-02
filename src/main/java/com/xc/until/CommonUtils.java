@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author xiaochao18
  * @date 2021-07-02 17:50
  */
@@ -96,11 +95,11 @@ public class CommonUtils {
     }
 
     public static void main(String[] args) throws IOException, TemplateException {
-       String a="{\"#name\":\"${#name!''}\",\"age\":${age!'null'}}";
+        String a = "{\"#name\":\"${#name!''}\",\"age\":${age!'null'}}";
 
-         Map<String, String> param=new HashMap<>();
-        param.put("#name","23");
-        param.put("age","\"123\"");
+        Map<String, String> param = new HashMap<>();
+        param.put("#name", "23");
+        param.put("age", "\"123\"");
         String s = assemblyTemplate(a, param);
         Map<String, String> stringObjectMap = JsonUtil.parseMapString(s);
         System.out.println(JsonUtil.toJSONString(stringObjectMap));
@@ -161,5 +160,15 @@ public class CommonUtils {
         return sb.toString();
     }
 
+    public static List<String> getRegexStr(String str, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher mc = pattern.matcher(str);
+        List<String> list = new ArrayList<>();
+        while (mc.find()) {
+            String group = mc.group();
+            list.add(group);
+        }
+        return list;
+    }
 
 }
