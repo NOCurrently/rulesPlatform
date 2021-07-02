@@ -59,7 +59,6 @@ public class RuleService {
         return ruleResultVo;
     }
 
-
     /**
      * @param rule
      * @param param
@@ -81,14 +80,16 @@ public class RuleService {
                     Map<String, Object> errorMessage = new HashMap<>();
                     errorMessage.put("expression", expression);
                     errorMessage.put("index", i + 1);
-                    errorMessage.put("msg", expressionDO.getMessage());
+                    if (execute != null && execute instanceof Boolean && !(Boolean) execute) {
+                        errorMessage.put("msg", expressionDO.getMessage());
+                    }
                     errorMessage.put("result", execute);
                     debugMessage.add(errorMessage);
                 }
                 map.put("P" + (i + 1), EasyUtils.toString(execute));
             }
         }
-        String sb = CommonUtils.stringAppend(rule.getExecutiveLogic(), "#\\d{1,2}", "${P", "}","#");
+        String sb = CommonUtils.stringAppend(rule.getExecutiveLogic(), "#\\d{1,2}", "${P", "}", "#");
         String expression = CommonUtils.assemblyTemplate(sb, map);
         Object execute = CommonUtils.expressRunner(expression, param, isPrintError);
         ruleResultVo.setExpression(expression);

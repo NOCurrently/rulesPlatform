@@ -34,21 +34,21 @@ public class RuleController {
     private RuleService ruleService;
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    @ApiOperation("插入数据源")
+    @ApiOperation("插入规则")
     public WebResponse insertSelective(@RequestBody Rule rule) {
         int i = ruleMapper.insertSelective(rule);
         return WebResponse.succeed(i);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ApiOperation("修改数据源")
+    @ApiOperation("修改规则")
     public WebResponse updateDataSource(@RequestBody Rule rule) {
         int i = ruleMapper.updateByPrimaryKeySelective(rule);
         return WebResponse.succeed(i);
     }
 
     @RequestMapping(value = "/select_by_ids", method = RequestMethod.POST)
-    @ApiOperation("查询数据源")
+    @ApiOperation("查询规则")
     public WebResponse selectByIds(@RequestBody Set<Integer> ids) {
 
         List<Rule> rules = ruleMapper.selectByIds(ids);
@@ -56,11 +56,11 @@ public class RuleController {
     }
 
     @RequestMapping(value = "/execute", method = RequestMethod.POST)
-    @ApiOperation("execute")
+    @ApiOperation("执行规则")
     public WebResponse execute(@RequestBody RuleVo ruleVo) throws Exception {
         Rule rule = ruleMapper.selectById(ruleVo.getId());
 
-        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true,true);
+        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true, true);
         return WebResponse.succeed(execute);
     }
 
