@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-07-01 23:28:29
+-- 生成日期： 2021-07-02 18:47:29
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -85,6 +85,59 @@ INSERT INTO `data_source` (`id`, `timeout`, `type`, `param_template`, `result_ex
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `dict_type`
+--
+
+CREATE TABLE `dict_type` (
+  `id` int(11) NOT NULL,
+  `type` tinyint(4) DEFAULT '0',
+  `code` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `remarks` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  `update_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- 转存表中的数据 `dict_type`
+--
+
+INSERT INTO `dict_type` (`id`, `type`, `code`, `name`, `remarks`, `status`, `update_by`, `create_by`, `create_time`, `update_time`) VALUES
+(1, 0, 'A', '请求例子', '2', 1, 'string', 'string', '2021-07-02 18:43:01', '2021-07-02 18:44:54');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `dict_value`
+--
+
+CREATE TABLE `dict_value` (
+  `id` int(11) NOT NULL,
+  `type_code` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sort` int(11) DEFAULT NULL,
+  `remarks` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  `update_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `value_str` varchar(200) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- 转存表中的数据 `dict_value`
+--
+
+INSERT INTO `dict_value` (`id`, `type_code`, `name`, `sort`, `remarks`, `status`, `update_by`, `create_by`, `create_time`, `update_time`, `value_str`) VALUES
+(1, 'A', 'name', 0, '00', 1, NULL, NULL, '2021-07-02 18:44:02', '2021-07-02 18:45:24', 'xiaochao');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `operation_log`
 --
 
@@ -132,7 +185,7 @@ CREATE TABLE `rule` (
 --
 
 INSERT INTO `rule` (`id`, `name`, `type`, `sort`, `expression_json_list`, `executive_logic`, `action_json_list`, `aggregat_id`, `expect_return_class`, `status`, `update_by`, `create_by`, `create_time`, `update_time`) VALUES
-(1, '111', NULL, 0, '[{\"left\":\"namexc_returt\",\"operation\":\"!=\",\"right\":\"1\"},{\"left\":\"msg\",\"operation\":\"==\",\"right\":\"100\"}]', '1&&2', '[{\"topic\":\"xiaochao\",\"message\":\"fdafdsaf\"}]', 4, 'java.lang.Boolean', 1, 'string', 'string', '2021-06-29 22:32:31', '2021-06-29 23:26:26');
+(1, '111', NULL, 0, '[{\"left\":\"namexc_returt\",\"operation\":\"!=\",\"right\":\"1\"},{\"left\":\"msg\",\"operation\":\"==\",\"right\":\"100\"}]', '#1&&#2', '[{\"topic\":\"xiaochao\",\"message\":\"fdafdsaf\"}]', 4, 'java.lang.Boolean', 1, 'string', 'string', '2021-06-29 22:32:31', '2021-07-02 17:02:37');
 
 --
 -- 转储表的索引
@@ -148,6 +201,18 @@ ALTER TABLE `aggregat_data_source`
 -- 表的索引 `data_source`
 --
 ALTER TABLE `data_source`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `dict_type`
+--
+ALTER TABLE `dict_type`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `dict_value`
+--
+ALTER TABLE `dict_value`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -177,6 +242,18 @@ ALTER TABLE `aggregat_data_source`
 --
 ALTER TABLE `data_source`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- 使用表AUTO_INCREMENT `dict_type`
+--
+ALTER TABLE `dict_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- 使用表AUTO_INCREMENT `dict_value`
+--
+ALTER TABLE `dict_value`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `operation_log`
