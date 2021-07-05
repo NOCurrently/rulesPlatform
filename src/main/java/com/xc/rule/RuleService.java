@@ -1,6 +1,5 @@
 package com.xc.rule;
 
-import com.ql.util.express.DefaultContext;
 import com.xc.datasouce.manage.ProcessSegmentManage;
 import com.xc.po.ActionDO;
 import com.xc.po.ExpressionDO;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -30,14 +27,17 @@ public class RuleService {
     @Autowired
     private ProcessSegmentManage dataSourceManage;
 
-    public RuleResultVo execute(Rule rule, Map<String, Object> param, boolean idDebug, boolean isPrintError) throws Exception {
+    public RuleResultVo execute(Rule rule, Map<String, Object> param, boolean isDebug) throws Exception {
+        if (StringUtils.isBlank(rule.getExecutiveLogic())) {
+            throw new RuntimeException("执行规则不能为空");
+        }
         Integer aggregatId = rule.getAggregatId();
         Map<String, Object> objectMap = new HashMap<>(param);
         if (aggregatId != null) {
             Map<String, Object> dataSourceRut = dataSourceManage.executeProcess(aggregatId, param);
             objectMap.putAll(dataSourceRut);
         }
-        RuleResultVo ruleResultVo = getExpression(rule, objectMap, idDebug, isPrintError);
+        RuleResultVo ruleResultVo = getExpression(rule.getExecutiveLogic(), rule.getExpressionJsonList(), objectMap, isDebug);
 
         Object result = ruleResultVo.getResult();
         String expectReturnClassStr = rule.getExpectReturnClass();
@@ -59,58 +59,53 @@ public class RuleService {
         return ruleResultVo;
     }
 
+
     /**
-     * @param rule
      * @param param
      * @return
      * @throws IOException
      * @throws TemplateException
      */
-    private RuleResultVo getExpression(Rule rule, Map<String, Object> param, boolean idDebug, boolean isPrintError) throws Exception {
+    private RuleResultVo getExpression(String executiveLogic, String expressionJsonList, Map<String, Object> param, boolean isDebug)  {
+
         RuleResultVo ruleResultVo = new RuleResultVo();
         List<Map<String, Object>> debugMessage = new ArrayList<>();
-        List<ExpressionDO> expressionDOs = JsonUtil.parseArray(rule.getExpressionJsonList(), ExpressionDO.class);
-        Map<String, String> map = new HashMap<>();
-        if (expressionDOs != null) {
-            List<String> list = CommonUtils.getRegexStr(rule.getExecutiveLogic(), "#\\d{1,2}");
-            int size = expressionDOs.size();
-            for (String s : list) {
-                int index = EasyUtils.parseInt(s.substring(1)) - 1;
-                if (index >= 0 && index < size) {
-                    ExpressionDO expressionDO = expressionDOs.get(index);
-                    String expression = "(" + expressionDO.getLeft() + expressionDO.getOperation() + expressionDO.getRight() + ")";
-                    Object execute = CommonUtils.expressRunner(expression, param, isPrintError);
-                    if (idDebug) {
-                        Map<String, Object> errorMessage = new HashMap<>();
-                        errorMessage.put("expression", expression);
-                        errorMessage.put("index", index + 1);
-                        if (execute != null && execute instanceof Boolean && !(Boolean) execute) {
-                            errorMessage.put("msg", expressionDO.getMessage());
-                        }
-                        errorMessage.put("result", execute);
-                        debugMessage.add(errorMessage);
-                    }
-                    map.put("P" + (index + 1), EasyUtils.toString(execute));
-                } else {
-                    map.put("P" + (index + 1), s);
+        Map<String, Object> map = new HashMap<>();
+        List<ExpressionDO> expressionDOs = JsonUtil.parseArray(expressionJsonList, ExpressionDO.class);
+        List<String> list = CommonUtils.getRegexStr(executiveLogic, "#\\d{1,2}");
+        int size = expressionDOs == null ? 0 : expressionDOs.size();
+        for (String subRule : list) {
+            int index = EasyUtils.parseInt(subRule.replaceAll("#", "")) - 1;
+            String expression = null;
+            Object execute = null;
+            String message = null;
+            if (index >= 0 && index < size) {
+                ExpressionDO expressionDO = expressionDOs.get(index);
+                expression = "(" + expressionDO.getLeft() + expressionDO.getOperation() + expressionDO.getRight() + ")";
+                execute = CommonUtils.expressRunner(expression, param);
+                if (execute != null && execute instanceof Boolean && !(Boolean) execute) {
+                    message = expressionDO.getMessage();
                 }
+                map.put(subRule, execute);
+            } else {
+                message = "表达式列表未找到对应索引!";
+            }
+            if (isDebug) {
+                Map<String, Object> errorMessage = new HashMap<>();
+                errorMessage.put("expression", expression);
+                errorMessage.put("index", index + 1);
+                errorMessage.put("msg", message);
+                errorMessage.put("result", execute);
+                debugMessage.add(errorMessage);
             }
         }
-        String sb = CommonUtils.stringAppend(rule.getExecutiveLogic(), "#\\d{1,2}", "${P", "}", "#");
-        String expression = CommonUtils.assemblyTemplate(sb, map);
-        Object execute = CommonUtils.expressRunner(expression, param, isPrintError);
-        ruleResultVo.setExpression(expression);
+        map.putAll(param);
+        Object execute = CommonUtils.expressRunner(executiveLogic, map);
+        ruleResultVo.setExpression(executiveLogic);
         ruleResultVo.setDeBugInfo(debugMessage);
         ruleResultVo.setRuleParam(param);
         ruleResultVo.setResult(execute);
         return ruleResultVo;
     }
 
-    public static void main(String[] args) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        map.put("P1", 3);
-        map.put("P2", 3);
-        Object execute = CommonUtils.expressRunner("P3+2+4", map, true);
-        System.out.println(execute);
-    }
 }

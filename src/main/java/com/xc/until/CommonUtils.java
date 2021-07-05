@@ -85,24 +85,36 @@ public class CommonUtils {
      * @throws IOException
      * @throws TemplateException
      */
-    public static String assemblyTemplate(String templateStr, Map<String, String> param) throws IOException, TemplateException {
-        String requestParam;
-        Template template = new Template(null, new StringReader(templateStr), configuration);
-        StringWriter writer = new StringWriter();
-        template.process(param, writer);
-        requestParam = writer.getBuffer().toString();
-        return requestParam;
+    public static String assemblyTemplate(String templateStr, Map<String, String> param) {
+        try {
+            Template template = new Template(null, new StringReader(templateStr), configuration);
+            StringWriter writer = new StringWriter();
+            template.process(param, writer);
+            String requestParam = writer.getBuffer().toString();
+            return requestParam;
+        } catch (Exception e) {
+            throw new RuntimeException("模板=" + templateStr + ",param=" + param, e);
+        }
+
     }
 
-    public static void main(String[] args) throws IOException, TemplateException {
-        String a = "{\"#name\":\"${#name!''}\",\"age\":${age!'null'}}";
+    public static void main(String[] args) throws Exception {
+      /*  String a = "{\"#name\":\"${#name!''}\",\"age\":${age!'null'}}";
 
         Map<String, String> param = new HashMap<>();
         param.put("#name", "23");
         param.put("age", "\"123\"");
         String s = assemblyTemplate(a, param);
         Map<String, String> stringObjectMap = JsonUtil.parseMapString(s);
-        System.out.println(JsonUtil.toJSONString(stringObjectMap));
+        System.out.println(JsonUtil.toJSONString(stringObjectMap));*/
+
+       /* String s = stringAppend("1234567#135abc#45ab#abc#2", "#\\d{1,2}", "${P", "}", "#");
+        System.out.println(s);*/
+        Map<String, Object> param = new HashMap<>();
+        param.put("#12", true);
+        param.put("#13rew", false);
+        Object o = expressRunner("#12&&#13rew", param);
+        System.out.println(o);
     }
 
     /**
@@ -110,24 +122,22 @@ public class CommonUtils {
      *
      * @param expression
      * @param param
-     * @param isPrintError
      * @return
      * @throws Exception
      */
-    public static Object expressRunner(String expression, Map<String, Object> param, boolean isPrintError) throws Exception {
-        ArrayList<String> errorList = null;
-        if (isPrintError) {
-            errorList = new ArrayList<>();
-        }
+    public static Object expressRunner(String expression, Map<String, Object> param) {
         DefaultContext<String, Object> context = new DefaultContext<>();
         if (param != null) {
             context.putAll(param);
         }
-        Object execute = runner.execute(expression, context, errorList, false, false);
-        if (errorList != null && !errorList.isEmpty()) {
-            log.error("expression={},context={},errorList={}", expression, context, errorList);
+        Object execute = null;
+        try {
+            execute = runner.execute(expression, context, null, false, false);
+            return execute;
+        } catch (Exception e) {
+            throw new RuntimeException("表达式=" + expression + ",context=" + context, e);
         }
-        return execute;
+
     }
 
     /**
@@ -143,19 +153,18 @@ public class CommonUtils {
         Pattern pattern = Pattern.compile(regex);
         Matcher mc = pattern.matcher(str);
         StringBuilder sb = new StringBuilder(str);
-        int prefixLength = prefix.length();
-        int suffixLength = suffix.length();
         int index = 0;
+        boolean deleteFlag = deleteStr != null && !deleteStr.equals("");
         while (mc.find()) {
             String group = mc.group();
-            int i = str.indexOf(group);
-            sb.insert(i + index, prefix);
-            index = index + prefixLength;
-            sb.insert(i + group.length() + index, suffix);
-            index = index + suffixLength;
-        }
-        if (deleteStr != null && !deleteStr.equals("")) {
-            return sb.toString().replace(deleteStr, "");
+            if (deleteFlag) {
+                group = group.replaceAll(deleteStr, "");
+            }
+            int start = mc.start() + index;
+            int end = mc.end() + index;
+            String replace = prefix + group + suffix;
+            sb.replace(start, end, replace);
+            index = index + replace.length() - group.length();
         }
         return sb.toString();
     }

@@ -60,7 +60,7 @@ public class RuleController {
     public WebResponse execute(@RequestBody RuleVo ruleVo) throws Exception {
         Rule rule = ruleMapper.selectById(ruleVo.getId());
 
-        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true, true);
+        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true);
         return WebResponse.succeed(execute);
     }
 
