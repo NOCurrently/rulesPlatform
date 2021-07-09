@@ -58,11 +58,5 @@ public class DictController {
         return WebResponse.succeed(insert);
     }
 
-    @RequestMapping(value = "/selectValueByCode", method = RequestMethod.POST)
-    @ApiOperation("查询值")
-    public WebResponse dataSourceService(@RequestBody String dataSource) {
-        List<DictValue> dictValues = dictService.selectValueByCode(dataSource);
-        return WebResponse.succeed(dictValues);
-    }
 
 }

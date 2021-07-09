@@ -10,7 +10,7 @@
         <result column="executive_logic" jdbcType="VARCHAR" property="executiveLogic"/>
         <result column="action_json_list" jdbcType="VARCHAR" property="actionJsonList"/>
         <result column="aggregat_id" jdbcType="INTEGER" property="aggregatId"/>
-        <result column="expect_return_class" jdbcType="VARCHAR" property="expectReturnClass"/>
+        <result column="expect_return" jdbcType="VARCHAR" property="expectReturn"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
@@ -18,19 +18,17 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, type, sort, expression_json_list, executive_logic, action_json_list, aggregat_id, expect_return_class,
-    status, update_by, create_by,create_time, update_time
+    id, name, type, sort, expression_json_list, executive_logic, action_json_list, aggregat_id, expect_return,
+    status, update_by, create_by,create_time, update_time,rule_collection_id,param_json
   </sql>
 
-    <select id="selectByIds" resultMap="BaseResultMap">
+    <select id="selectByRuleCollId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from rule
-        where id in
-        <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
-            #{item}
-        </foreach>
+        where rule_collection_id = #{ruleCollectionId,jdbcType=INTEGER}
         and status=1
+        order by sort
     </select>
     <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -52,6 +50,12 @@
             <if test="sort != null">
                 sort,
             </if>
+            <if test="paramJson != null">
+                param_json,
+            </if>
+            <if test="ruleCollectionId != null">
+                rule_collection_id,
+            </if>
 
             <if test="expressionJsonList != null">
                 expression_json_list,
@@ -65,8 +69,8 @@
             <if test="aggregatId != null">
                 aggregat_id,
             </if>
-            <if test="expectReturnClass != null">
-                expect_return_class,
+            <if test="expectReturn != null">
+                expect_return,
             </if>
             <if test="updateBy != null">
                 update_by,
@@ -86,6 +90,12 @@
             <if test="sort != null">
                 #{sort},
             </if>
+            <if test="paramJson != null">
+                #{paramJson},
+            </if>
+            <if test="ruleCollectionId != null">
+                #{ruleCollectionId},
+            </if>
             <if test="expressionJsonList != null">
                 #{expressionJsonList},
             </if>
@@ -98,8 +108,8 @@
             <if test="aggregatId != null">
                 #{aggregatId},
             </if>
-            <if test="expectReturnClass != null">
-                #{expectReturnClass},
+            <if test="expectReturn != null">
+                #{expectReturn},
             </if>
 
             <if test="updateBy != null">
@@ -122,6 +132,12 @@
             <if test="sort != null">
                 sort=#{sort},
             </if>
+            <if test="paramJson != null">
+                param_json = #{paramJson},
+            </if>
+            <if test="ruleCollectionId != null">
+                rule_collection_id= #{ruleCollectionId},
+            </if>
             <if test="expressionJsonList != null">
                 expression_json_list=#{expressionJsonList},
             </if>
@@ -134,8 +150,8 @@
             <if test="aggregatId != null">
                 aggregat_id=#{aggregatId},
             </if>
-            <if test="expectReturnClass != null">
-                expect_return_class=#{expectReturnClass},
+            <if test="expectReturn != null">
+                expect_return=#{expectReturn},
             </if>
 
             <if test="updateBy != null">

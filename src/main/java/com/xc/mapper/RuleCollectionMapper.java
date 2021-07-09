@@ -1,7 +1,7 @@
 package com.xc.mapper;
 
-import com.xc.po.DictValue;
 import com.xc.po.Rule;
+import com.xc.po.RuleCollection;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Set;
  * @author 肖超
  * @date: 2019年5月2日
  */
-public interface RuleMapper {
+public interface RuleCollectionMapper {
 
     /**
      * 主键查找
@@ -23,17 +23,8 @@ public interface RuleMapper {
      * @author: 肖超
      * @date: 2019年5月2日
      */
-    Rule selectById(Integer id);
+    RuleCollection selectById(Integer id);
 
-    /**
-     * 查找多个
-     *
-     * @param ruleCollectionId
-     * @return
-     * @author: 肖超
-     * @date: 2019年4月30日
-     */
-    List<Rule> selectByRuleCollId(Integer ruleCollectionId);
 
     /**
      * 增量增加
@@ -43,7 +34,7 @@ public interface RuleMapper {
      * @author: 肖超
      * @date: 2019年5月2日
      */
-    int insertSelective(Rule record);
+    int insertSelective(RuleCollection record);
 
     /**
      * 在增量修改
@@ -53,6 +44,6 @@ public interface RuleMapper {
      * @author: 肖超
      * @date: 2019年5月2日
      */
-    int updateByPrimaryKeySelective(Rule record);
+    int updateByPrimaryKeySelective(RuleCollection record);
 
 }

@@ -13,7 +13,7 @@ $(function () {
         pageContainer: $("#authListPaging"),
         pageListContainer: $("#data-table"),
         pageViewName: 'authListPaging',
-        url: path + "/web/auth/selectSysAuthList",
+        url: path + "/sysauth/selectSysAuthList",
         curPageName: 'currentPage',
         pageSize: 15,
         urlRequestData:{}
@@ -23,7 +23,7 @@ $(function () {
     	//显示一级目录
  	   $.ajax({
  			type: "GET",
- 			url: path + "/web/auth/firstAuthMenu",
+ 			url: path + "/sysauth/firstAuthMenu",
  			//async: false,//一条请求
  			error:function(data){
  				//alert('11');
@@ -49,7 +49,7 @@ $(function () {
  		  });
  	    $("#oneLevel").css("display","none");
     }
-
+    
     $("#insert-button").click(function () {
     	$("#name").val("");
     	$("#code").val("");
@@ -61,12 +61,12 @@ $(function () {
     	document.getElementById("pid").innerHTML = ""
     	document.getElementById("auth_result").innerHTML = "";
     	$('#result').css("display","none");
-
+    	
     	getFirstAuthMenu();
 		$('#createAuthModel').modal({});
 
     });
-
+    
     //提交数据
 	$("#authSaveBtn").bind("click",function(){
 		if(!$("#name").val()) {
@@ -79,38 +79,29 @@ $(function () {
 			$('#auth_result').html("资源请求路径不能为空").show();
 			 return false;
 		}
-	     $(this).attr('disabled', 'disabled');
-
 		 $('#r_authForm').ajaxForm({
-			 dataType: 'json',
-	            success:function (data) {
-	            	userComplete(data); 
-	    			 $("#authSaveBtn").removeAttr('disabled');
-	            },  
-				 error: function (e) {
-	    			 $("#authSaveBtn").removeAttr('disabled');
-		         }  	 // post-submit callback
-	           
+	            success: userComplete,  	 // post-submit callback
+	            dataType: 'json'
 	     }).submit();
 		return true;
 	});
-
+    
 	//提交成功后
     function userComplete(data){
          if (data.code=='200'){
         	//关闭当前窗口
 	    	 $("#createAuthModel").modal('hide');
-
+	    	 
 	         //pageSize标签存在于page.js中
 	         var pageSize = $("#pageSize").val();
 	         if(!pageSize) {
 	         	pageSize = 15;
 	         }
-	         authListPaging = new PageView({
+	         authPage = new PageView({
 	             pageContainer: $("#authListPaging"),
 	             pageListContainer: $("#data-table"),
-	             pageViewName: 'authListPaging',
-	             url: path + "/web/auth/selectSysAuthList",
+	             pageViewName: 'authPage',
+	             url: path + "/sysauth/selectSysAuthList",
 	             curPageName: 'currentPage',//currentPage当前页码，传入后台的key值
 	             pageSize: pageSize,
 	             urlRequestData: {
@@ -131,8 +122,8 @@ $(function () {
 
     table.on('click', ".edit", function () {
         var id = $(this).attr('authId');
-        $('#modifyAuthModel').load(path + "/web/auth/editAuth?id="+id);
-
+        $('#modifyAuthModel').load(path + "/sysauth/editAuth?id="+id);
+        
         $('#modifyAuthModel').modal();
     });
 
@@ -141,12 +132,12 @@ $(function () {
     	$('#authId').val(id);
     	$('#delcfmModel').modal();
     });
-
+    
     $("#imsuer").click(function () {
     	var authId=$("#authId").val();
    	 	$.ajax({
             type: "get",
-            url: path + "/web/auth/deleteSysAuthById?id=" + authId,
+            url: path + "/sysauth/deleteSysAuthById?id=" + authId,
             format: "json",
             success: function (data) {
                 if (data.code != "200") {
@@ -154,7 +145,7 @@ $(function () {
                 } else {
                 	var authname = $("#authname").val();
 	       	         var authurl = $("#authurl").val();
-
+	
 	       	         var curPage = $("#pageInput").val();
 	       	         if (!curPage) {
 	       	        	 curPage = 1;
@@ -164,11 +155,11 @@ $(function () {
 	       	         if(!pageSize) {
 	       	         	pageSize = 15;
 	       	         }
-	       	      authListPaging = new PageView({
+	       	         authPage = new PageView({
 	       	             pageContainer: $("#authListPaging"),
 	       	             pageListContainer: $("#data-table"),
-	       	             pageViewName: 'authListPaging',
-	       	             url: path + "/web/auth/selectSysAuthList",
+	       	             pageViewName: 'authPage',
+	       	             url: path + "/sysauth/selectSysAuthList",
 	       	             curPageName: 'currentPage',//currentPage当前页码，传入后台的key值
 	       	             pageSize: pageSize,
 	       	             curPage: curPage,
@@ -181,7 +172,7 @@ $(function () {
             }
         });
     });
-
+    
     $("#search-button").click(function () {
         var authname = $("#authname").val();
         var authurl = $("#authurl").val();
@@ -191,11 +182,11 @@ $(function () {
         if(!pageSize) {
         	pageSize = 15;
         }
-        authListPaging = new PageView({
+        authPage = new PageView({
             pageContainer: $("#authListPaging"),
             pageListContainer: $("#data-table"),
-            pageViewName: 'authListPaging',
-            url: path + "/web/auth/selectSysAuthList",
+            pageViewName: 'authPage',
+            url: path + "/sysauth/selectSysAuthList",
             curPageName: 'currentPage',
             pageSize: pageSize,
             urlRequestData: {

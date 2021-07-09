@@ -49,22 +49,16 @@ public class DictService {
         return dictValueMapper.insertSelective(dictValue);
     }
 
-    /**
-     * @param code
-     * @return
-     * @author: 肖超
-     * @date: 2019年4月17日
-     */
-    public List<DictValue> selectValueByCode(String code) {
-        DictType dictType = dictTypeMapper.selectByCode(code);
+    public List<DictType> selectTypeByName(String name,Integer pageNum,Integer pageSize) {
+        List<DictType> dictType = dictTypeMapper.selectByName(name,pageNum,pageSize);
         if (dictType == null) {
             return new ArrayList<>(0);
         }
-        List<DictValue> poList = dictValueMapper.selectByTypeCode(code);
-        if (poList == null) {
-            return new ArrayList<>(0);
-        }
-        return poList;
+        return dictType;
+    }
+    public DictType selectTypeId(Integer id) {
+        DictType dictType = dictTypeMapper.selectById(id);
+        return dictType;
     }
 
 

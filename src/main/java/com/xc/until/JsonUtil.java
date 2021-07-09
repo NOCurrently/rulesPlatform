@@ -77,15 +77,18 @@ public class JsonUtil {
             return defaultStr;
         }
         try {
-            return JSON.toJSONString(object, SERIALIZE_CONFIG, features);
+            String result = JSON.toJSONString(object, SERIALIZE_CONFIG, features);
+            return result == null ? defaultStr : result;
         } catch (Exception e) {
             log.error("toJSONString Exception :" + object, e);
         }
         return defaultStr;
     }
+
     public static String toJSONString(Object object) {
-        return  toJSONString(object,null);
+        return toJSONString(object, null);
     }
+
     /**
      * json字符串转bean
      *
@@ -94,33 +97,59 @@ public class JsonUtil {
      * @param <T>
      * @return
      */
-    public static <T> T parseObject(String text, Class<T> clazz) {
+    public static <T> T parseObject(String text, Class<T> clazz, T defaultObj) {
         if (StringUtils.isBlank(text)) {
-            return null;
+            return defaultObj;
         }
         try {
-            return JSON.parseObject(text, clazz);
+            T result = JSON.parseObject(text, clazz);
+            return result == null ? defaultObj : result;
         } catch (Exception e) {
             log.error("parseObject Class Exception :" + text, e);
         }
-        return null;
+        return defaultObj;
     }
 
-    public static Map<String, String> parseMapString(String text) {
-        return parseObject(text, new TypeReference<Map<String, String>>() {
-        });
-    }
-
-    public static <T> T parseObject(String text, TypeReference<T> typeReference) {
+    public static JSONObject parseObject(String text) {
         if (StringUtils.isBlank(text)) {
             return null;
         }
         try {
-            return JSON.parseObject(text, typeReference);
+            return JSON.parseObject(text);
+        } catch (Exception e) {
+            log.error("parseObject Exception :" + text, e);
+        }
+        return null;
+    }
+
+    public static <T> T parseObject(String text, Class<T> clazz) {
+        return parseObject(text, clazz, null);
+    }
+
+    public static Map<String, String> parseMapString(String text, Map<String, String> defaultMap) {
+        return parseObject(text, new TypeReference<Map<String, String>>() {
+        }, defaultMap);
+    }
+
+    public static Map<String, String> parseMapString(String text) {
+        return parseMapString(text, null);
+    }
+
+    public static <T> T parseObject(String text, TypeReference<T> typeReference, T defaultObj) {
+        if (StringUtils.isBlank(text)) {
+            return defaultObj;
+        }
+        try {
+            T result = JSON.parseObject(text, typeReference);
+            return result == null ? defaultObj : result;
         } catch (Exception e) {
             log.error("parseObject typeReference Exception :" + text, e);
         }
-        return null;
+        return defaultObj;
+    }
+
+    public static <T> T parseObject(String text, TypeReference<T> typeReference) {
+        return parseObject(text, typeReference, null);
     }
 
     /**
@@ -131,16 +160,22 @@ public class JsonUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> parseArray(String text, Class<T> clazz) {
+    public static <T> List<T> parseArray(String text, Class<T> clazz, List<T> defaultList) {
         if (StringUtils.isBlank(text)) {
-            return null;
+            return defaultList;
         }
         try {
-            return JSON.parseArray(text, clazz);
+            List<T> result = JSON.parseArray(text, clazz);
+            return result == null ? defaultList : result;
         } catch (Exception e) {
             log.error("parseArray Exception :" + text, e);
         }
-        return null;
+        return defaultList;
+    }
+
+    public static <T> List<T> parseArray(String text, Class<T> clazz) {
+
+        return parseArray(text, clazz, null);
     }
 
 }

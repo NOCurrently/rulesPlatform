@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xc.mapper.RuleCollectionMapper">
+    <resultMap id="BaseResultMap" type="com.xc.po.RuleCollection">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="type" jdbcType="TINYINT" property="type"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, type, status, update_by, create_by,create_time, update_time
+  </sql>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from rule_collection
+        where id =#{id,jdbcType=INTEGER}
+        and status=1
+    </select>
+    <insert id="insertSelective" parameterType="com.xc.po.RuleCollection" useGeneratedKeys="true" keyProperty="id">
+        insert into rule_collection
+
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.xc.po.RuleCollection">
+        update rule_collection
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="updateBy != null">
+                update_by=#{updateBy}
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

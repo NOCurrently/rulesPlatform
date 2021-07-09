@@ -11,7 +11,7 @@
     </thead>
 
     <tbody>
-    <#list pageInfo.list as auth>
+    <#list selectSysAuthPage.list as auth>
 	    <tr class="auth_${auth.id}">
 	        <td>${auth.name!}</td>
 	        <td>${auth.code!}</td>
@@ -24,12 +24,10 @@
 	        </#if>
 	        <td>
 	            <a class="am-btn am-btn-xs am-btn-primary edit btn-info" href="javascript:void(0)" authId = "${auth.id}">编辑</a>
-                <#--<a class="am-btn am-btn-xs am-btn-primary delete btn-danger" href="javascript:void(0)" authId = "${auth.id}" onClick="delcfm('${base}/sysauth/deleteSysAuth?id=${auth.id}')">删除</a>-->
-	        </td>
+	     <!--         <a class="am-btn am-btn-xs am-btn-primary delete btn-danger" href="javascript:void(0)" authId = "${auth.id}" onClick="delcfm('${base}/sysauth/deleteSysAuth?id=${auth.id}')">删除</a>
+	     -->   </td>
 	    </tr>
     </#list>
     </tbody>
 </table>
-<input id="totalCount" value="${pageInfo.total!}" type="hidden"/>
-<script type="text/javascript" src="${base}/static/js/layer.js"></script>
-<script type="text/javascript" src="${base}/static/js/td-hover.js"></script>
+<input id="totalCount" value="${selectSysAuthPage.total}" type="hidden"/>

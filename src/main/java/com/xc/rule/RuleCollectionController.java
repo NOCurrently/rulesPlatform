@@ -1,12 +1,10 @@
 package com.xc.rule;
 
 import com.xc.config.WebResponse;
-import com.xc.datasouce.service.DataSourceService;
-import com.xc.mapper.DataSourceMapper;
-import com.xc.mapper.RuleMapper;
-import com.xc.po.DataSource;
+import com.xc.mapper.RuleCollectionMapper;
 import com.xc.po.Rule;
-import com.xc.vo.DataSourceVo;
+import com.xc.po.RuleCollection;
+import com.xc.vo.RuleCollectionResultVo;
 import com.xc.vo.RuleResultVo;
 import com.xc.vo.RuleVo;
 import io.swagger.annotations.Api;
@@ -19,48 +17,46 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Api(description = "规则")
 @RestController
 @Slf4j
-@RequestMapping(value = "/xiaochao/rule")
-public class RuleController {
+@RequestMapping(value = "/xiaochao/ruleCollection")
+public class RuleCollectionController {
 
     @Autowired
-    private RuleMapper ruleMapper;
+    private RuleCollectionMapper ruleCollectionMapper;
     @Autowired
-    private RuleService ruleService;
+    private RuleCollectionService ruleCollectionService;
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    @ApiOperation("插入规则")
-    public WebResponse insertSelective(@RequestBody Rule rule) {
-        int i = ruleMapper.insertSelective(rule);
+    @ApiOperation("插入规则集合")
+    public WebResponse insertSelective(@RequestBody RuleCollection rule) {
+        int i = ruleCollectionMapper.insertSelective(rule);
         return WebResponse.succeed(i);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ApiOperation("修改规则")
-    public WebResponse updateDataSource(@RequestBody Rule rule) {
-        int i = ruleMapper.updateByPrimaryKeySelective(rule);
+    @ApiOperation("修改规则集合")
+    public WebResponse updateDataSource(@RequestBody RuleCollection rule) {
+        int i = ruleCollectionMapper.updateByPrimaryKeySelective(rule);
         return WebResponse.succeed(i);
     }
 
-    @RequestMapping(value = "/selectByRuleCollIds", method = RequestMethod.POST)
-    @ApiOperation("查询规则")
+    @RequestMapping(value = "/selectById", method = RequestMethod.POST)
+    @ApiOperation("查询规则集合")
     public WebResponse selectByIds(Integer id) {
 
-        List<Rule> rules = ruleMapper.selectByRuleCollId(id);
+        RuleCollection rules = ruleCollectionMapper.selectById(id);
         return WebResponse.succeed(rules);
     }
 
     @RequestMapping(value = "/execute", method = RequestMethod.POST)
-    @ApiOperation("执行规则")
+    @ApiOperation("执行规则集合")
     public WebResponse execute(@RequestBody RuleVo ruleVo) throws Exception {
-        Rule rule = ruleMapper.selectById(ruleVo.getId());
+        RuleCollection rule = ruleCollectionMapper.selectById(ruleVo.getId());
 
-        RuleResultVo execute = ruleService.execute(rule, ruleVo.getParam(), true);
+        RuleCollectionResultVo execute = ruleCollectionService.execute(rule, ruleVo.getParam(), true);
         return WebResponse.succeed(execute);
     }
 

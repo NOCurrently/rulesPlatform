@@ -6,19 +6,19 @@
         </div>
         <input id = "dictVTypeId" type="hidden" value=${dictValueResponse.typeId}>
         <div id="m_dictValue_result"  class="alert alert-danger" style="display:none"></div>
-        <form  id="m_dictValueForm"  class="form-horizontal" role="form" method="post" action="${base}/web/dict/updateSysDictValue">
+        <form  id="m_dictValueForm"  class="form-horizontal" role="form" method="post" action="${base}/sysDictValue/updateSysDictValue">
             <input name="id" type="hidden" value=${dictValueResponse.id}>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>值名称</label>
+                    <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>值</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="dictName" name="name" value="${dictValueResponse.name!}" placeholder="值名称">
+                        <input type="text" class="form-control" id="value" name="value" value="${dictValueResponse.value}" placeholder="值">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>值编码</label>
+                    <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>默认显示</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="dictCode" name="code" value="${dictValueResponse.code!}" placeholder="值编码">
+                        <input type="text" class="form-control" id="labelDefault" name="labelDefault" value="${dictValueResponse.labelDefault}" placeholder="默认显示">
                     </div>
                 </div>
                 <div class="form-group">
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger"></strong>备注</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="remarks" name="remarks" value="${dictValueResponse.remarks}" placeholder="备注">
+                        <input type="text" class="form-control" id="remark" name="remark" value="${dictValueResponse.remark}" placeholder="备注">
                     </div>
                 </div>
             </div>
@@ -48,17 +48,9 @@
 		  var path = $("#path").val();
 	      //提交数据
 	      $("#dictValueUpdateBtn").bind("click",function(){
-	      	  $(this).attr('disabled', 'disabled');
 	          $('#m_dictValueForm').ajaxForm({
-	           	dataType: 'json',
-	              success: function (data) {
-            	 dictValueComplete(data); 
-    			 $("#dictValueUpdateBtn").removeAttr('disabled');
-            },  
-			 error: function (e) {
-    			 $("#dictValueUpdateBtn").removeAttr('disabled');
-	         }
-	             
+	              success:       dictValueComplete,  	 // post-submit callback
+	              dataType: 'json'
 	          }).submit();
 	          return false;
 	      });
@@ -68,7 +60,7 @@
 	          if (data.code== "200"){
 	          	var id = $("#dictVTypeId").val();
 	          	$("#modifyDictValueModel").modal('hide');
-	          	$('#dictValueListPaging').load(path + "/web/dict/listSysDictValue?id="+id);
+	          	$('#dictValueListPaging').load(path + "/sysDictValue/listSysDictValue?id="+id);
 	          } else {
 	          	$('#m_dictValue_result').html(data.errorMessage).show();
 	          }

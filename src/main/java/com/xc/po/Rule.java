@@ -18,7 +18,10 @@ public class Rule {
     private String actionJsonList;
     //数据源id
     private Integer aggregatId;
-    private  String expectReturnClass;
+    //规则集合id
+    private Integer ruleCollectionId;
+    private String expectReturn;
+    private String paramJson;
     private Integer status;
     private String createBy;
     private String updateBy;

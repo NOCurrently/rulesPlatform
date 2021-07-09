@@ -13,12 +13,8 @@ import java.util.Map;
  * @return $
  **/
 @Data
-public class RuleResultVo {
+public class RuleCollectionResultVo {
 
-    private String expression;
-    private List<Map<String, Object>> deBugInfo;
-    private Map<String, Object> ruleParam;
-    private Object result;
-    //0:失败,1:成功
+    private List<RuleResultVo> ruleResultVos;
     private boolean success;
 }

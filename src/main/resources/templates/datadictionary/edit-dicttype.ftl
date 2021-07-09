@@ -5,32 +5,32 @@
             <h4 class="modal-title" id="myModalLabel">修改数据字典类型</h4>
         </div>
         <div id="m_dictType_result"  class="alert alert-danger" style="display:none"></div>
-        <form  id="m_dictTypeForm"  class="form-horizontal" role="form" method="post" action="${base}/web/dict/updateSysDictType">
+        <form  id="m_dictTypeForm"  class="form-horizontal" role="form" method="post" action="${base}/sysDictType/updateSysDictType">
             <input name="id" type="hidden" value=${dictTypeResponse.id}>
             <div class="modal-body">
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>名称</label>
                     <div class="col-sm-9">
                     ${dictTypeResponse.name}
-                        <input type="hidden" class="form-control" id="editname" name="name" value="${dictTypeResponse.name!}" placeholder="名称">
+                        <input type="hidden" class="form-control" id="editname" name="name" value="${dictTypeResponse.name}" placeholder="名称">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>编码</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="editcode" name="code" value="${dictTypeResponse.code!}" placeholder="编码">
+                        <input type="text" class="form-control" id="editcode" name="code" value="${dictTypeResponse.code}" placeholder="编码">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>类型</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="edittype" name="type" maxlength="1" value="${dictTypeResponse.type!}" placeholder="类型">
+                        <input type="text" class="form-control" id="edittype" name="type" maxlength="1" value="${dictTypeResponse.type}" placeholder="类型">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger"></strong>备注</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="editremark" name="remarks" value="${dictTypeResponse.remarks!}" placeholder="备注">
+                        <input type="text" class="form-control" id="editremark" name="remark" value="${dictTypeResponse.remark}" placeholder="备注">
                     </div>
                 </div>
             </div>
@@ -59,17 +59,9 @@
 	    	    $('#m_dictType_result').html("类型不能为空！").show();
 	    	    return;
 	      }
-	      $(this).attr('disabled', 'disabled');
           $('#m_dictTypeForm').ajaxForm({
-           dataType: 'json',
-              success:function (data) {
-            	 dictTypeComplete(data); 
-    			 $("#dictTypeUpdateBtn").removeAttr('disabled');
-            },  
-			 error: function (e) {
-    			 $("#dictTypeUpdateBtn").removeAttr('disabled');
-	         }  
-             
+              success:       dictTypeComplete,  	 // post-submit callback
+              dataType: 'json'
           }).submit();
           return true;
       });
@@ -95,7 +87,7 @@
                   pageContainer: $("#dictTypeListPaging"),
                   pageListContainer: $("#data-table"),
                   pageViewName: 'dictTypeList',
-                  url: path + "/web/dict/listSysDictType",
+                  url: path + "/sysDictType/listSysDictType",
                   curPageName: 'currentPage',
                   pageSize: pageSize,
                   curPage: curPage,

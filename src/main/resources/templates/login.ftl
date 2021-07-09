@@ -6,11 +6,11 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="amazeui/js/amazeui.min.js"></script>
-    <script type="text/javascript" src="js/login.js?v=101"></script>
-    <link rel="stylesheet" href="amazeui/css/amazeui.css">
-    <link rel="stylesheet" href="css/login.css">
+    <script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/amazeui/js/amazeui.min.js"></script>
+    <script type="text/javascript" src="/js/login.js?v=101"></script>
+    <link rel="stylesheet" href="/amazeui/css/amazeui.css">
+    <link rel="stylesheet" href="/css/login.css">
 
     <!-- Set render engine for 360 browser -->
     <meta name="renderer" content="webkit">

@@ -31,12 +31,23 @@ public class IndexController {
     @RequestMapping("/index")
     public String index(Model model) {
         ResourceTree filterTrees = new ResourceTree();
+        filterTrees.setId(1);
         filterTrees.setName("12");
-        filterTrees.setCode("234");
+        filterTrees.setIcon("fad");
+        List<ResourceTree> second = new ArrayList<>();
+        ResourceTree seconds = new ResourceTree();
+        seconds.setId(2);
+        seconds.setName("12");
+        seconds.setIcon("fad");
+        seconds.setUrl("/sysDictType/dictList");
+        second.add(seconds);
+        filterTrees.setTreeList(second);
         List<ResourceTree> resourceTreesVOVo = new ArrayList<>();
         resourceTreesVOVo.add(filterTrees);
+        UserDO userDO = new UserDO();
+        userDO.setName("xiaochao");
+        model.addAttribute("ssoUser", userDO);
         model.addAttribute("resourceTrees", resourceTreesVOVo);
-
         return "/index";
     }
 

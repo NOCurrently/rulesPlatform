@@ -3,76 +3,145 @@
  */
 $(function() {
 	var path = $("#path").val();
+	var type = $(".search-input").val();
+	var objectId = $(".search-input1").val();
+	
+	//var objectId = $("#objectId").val();
+
 
 	logListPaging = new PageView({
 		pageContainer : $("#logListPaging"),
 		pageListContainer : $("#data-table"),
 		pageViewName : 'logListPaging',
-		url : path + "/operationLog/logListData",
+		url : path + "/sysLog/list",
 		curPageName : 'currentPage',
 		pageSize : 15,
 		urlRequestData : {
+			keyword : type,
+			keyword1 : objectId
 		}
 	});
 
-    /**
-	 * 弹出新增页面
-     */
-    $("#insert-button_log").click(function () {
-        $('#log_result').css("display","none");
-        $('#insertLogModel').load(path + "/page/log/logEdit");
-        $('#insertLogModel').modal({});
+	$("#insert-button").click(function() {
+		 $("#r_userForm")[0].reset();
+		 $("#logId").val("");
+	     $("#type").val("");
+	     $("#userId").val("");
+	     $("#userName").val("");
+	     $("#ip").val("");
+	     $("#objectType").val("");
+	     $("#objectId").val("");
+	     $("#objectContent").val("");
+		document.getElementById("user_result").innerHTML = "";
+		$('#result').css("display", "none");
+		$('#createUserModel').modal({});
+	});
 
-    });
+	// 提交数据
+	$("#userSaveBtn").bind("click", function() {
+		$('#r_userForm').ajaxForm({
+			success : userComplete, // post-submit callback
+			dataType : 'json'
+		}).submit();
+		return false;
+	});
 
-    /**
-     * 清空搜索输入框
-     */
-    $("#clear-btn_log").click(function () {
-        $("#username").val("");
-        $("#url").val("");
-        $("#username").focus();
-    });
+	//提交成功后
+    function userComplete(data){
+	     if (data.code=='200'){
+	    	 //关闭当前窗口
+	    	 $("#createUserModel").modal('hide');
+	    	 
+	    	 var keyword = $(".search-input").val();
+	    	 var keyword1 = $(".search-input1").val();
+	    	 //curPage为当前页码，此$("#pageInput").val()取值为page.js中input框参数
+	    	 var curPage = $("#pageInput").val();
+	         if (!curPage) {
+	        	 curPage = 1;
+	         }
+	         //pageSize标签存在于page.js中
+	         var pageSize = $("#pageSize").val();
+	         if(!pageSize) {
+	         	pageSize = 15;
+	         }
+	         userPage = new PageView({
+	             pageContainer: $("#logListPaging"),
+	             pageListContainer: $("#data-table"),
+	             pageViewName: 'userPage',
+	             url: path + "/sysLog/list",
+	             curPageName: 'currentPage',
+	             pageSize: pageSize,
+	             curPage: curPage,
+	             urlRequestData: {
+	            	 "keyword" : keyword,
+	 				 "keyword1": keyword1
+	             }
+	         });
+	     } else {
+	    	 $('#user_result').html(data.errorMessage).show();
+	     }
+	}
 
-    /**
-     * 搜索事件
-     */
-    $("#search-button_log").click(function () {
-        $('#active_result_log').css('display', 'none');
-        var username = $("#username").val();
-        if (username.length > 100) {
-            $('#active_result_log').html("操作者姓名长度不能超过100！").show();
-            return;
-        }
-        var url = $("#url").val();
-        if (url.length > 200) {
-            $('#active_result_log').html("操作URL长度不能超过200！").show();
-            return;
-        }
+	$("#clear-btn").click(function() {
+		$(".search-input").val("");
+		$(".search-input").focus();
+	});
+	var table = $("#data-table");
 
-        var curPage = $("#pageInput").val();
-        if (!curPage) {
-            curPage = 1;
-        }
-        //pageSize标签存在于page.js中
-        var pageSize = $("#selectPageForm").val();
-        if (!pageSize) {
-            pageSize = 15;
-        }
+	table.on('click', ".edit", function() {
+		var id = $(this).attr('logId');
 
-        logListPaging = new PageView({
-            pageContainer: $("#logListPaging"),
-            pageListContainer: $("#data-table"),
-            pageViewName: 'logListPaging',
-            url: path + "/operationLog/logListData",
-            curPageName: 'currentPage',
-            curPage:curPage,
-            pageSize: pageSize,
-            urlRequestData: {
-                "username": username,
-                "url": url
-            }
-        });
-    });
+		$('#modifyUserModel').load(path + "/sysLog/edit?id=" + id);
+		$('#modifyUserModel').modal({});
+	});
 
+	table.on('click', ".delete", function() {
+		var id = $(this).attr('logId');
+		$('#confirm-model').val(id);
+		$('#delcfmModel').modal();
+	});
+
+	$("#imsuer").click(function() {
+		var logId = $("#confirm-model").val();
+		$.ajax({
+			type : "post",
+			url : path + "/sysLog/delete?id=" + logId,
+			format : "json",
+			success : function(data) {
+				if ($.trim(data.code) != "200") {
+					alert(data.message);
+				} else {
+					alert(data.message);
+					$(".log_" + logId).remove();
+				}
+			}
+		});
+	});
+
+	$("#search-button").click(function() {
+		// var keyword = $(".search-input").val();
+
+		var type = $("#type").val();
+		var objectId = $("#objectId").val();
+//		if ('' == keyword) {
+//			keyword = "";
+//		}
+		// pageSize标签存在于page.js中
+		var pageSize = $("#pageSize").val();
+		if (!pageSize) {
+			pageSize = 15;
+		}
+		userPage = new PageView({
+			pageContainer : $("#logListPaging"),
+			pageListContainer : $("#data-table"),
+			pageViewName : 'userPage',
+			url : path + "/sysLog/list",
+			curPageName : 'currentPage',
+			pageSize : pageSize,
+			urlRequestData : {
+			    keyword : type,
+				keyword1:objectId
+			}
+		});
+	})
 });

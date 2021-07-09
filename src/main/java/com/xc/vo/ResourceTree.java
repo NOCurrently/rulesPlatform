@@ -74,21 +74,6 @@ public class ResourceTree implements Serializable, Comparable<ResourceTree> {
     private String icon;
 
     /**
-     * 备份字段
-     */
-    private String back1;
-
-    /**
-     * 备份字段
-     */
-    private String back2;
-
-    /**
-     * 占时未使用
-     */
-    private String cascade;
-
-    /**
      * 资源树
      */
     private List<ResourceTree> treeList;

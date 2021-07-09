@@ -5,7 +5,7 @@
         <h4 class="modal-title" id="myModalLabel">修改资源</h4>
       </div>
        <div id="m_auth_result"  class="alert alert-danger" style="display:none"></div>
-      <form  id="m_authForm"  class="form-horizontal" role="form" method="post" action="${base}/web/auth/updateSysAuth">
+      <form  id="m_authForm"  class="form-horizontal" role="form" method="post" action="${base}/sysauth/updateSysAuth">
         <input name="id" type="hidden" value=${authResponse.id}>
         
       <div class="modal-body">

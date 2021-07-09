@@ -15,36 +15,38 @@ import java.util.List;
 public interface DictTypeMapper {
 
 
-	/**
-	 * 增量添加
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param record
-	 * @return
-	 */
-	int insertSelective(DictType record);
+    /**
+     * 增量添加
+     *
+     * @param record
+     * @return
+     * @author: 肖超
+     * @date: 2019年5月2日
+     */
+    int insertSelective(DictType record);
 
 
-	/**
-	 * 增量修改
-	 *
-	 * @author: 肖超
-	 * @date: 2019年5月2日
-	 * @param record
-	 * @return
-	 */
-	int updateByPrimaryKeySelective(DictType record);
+    /**
+     * 增量修改
+     *
+     * @param record
+     * @return
+     * @author: 肖超
+     * @date: 2019年5月2日
+     */
+    int updateByPrimaryKeySelective(DictType record);
 
 
+    /**
+     * code查询
+     *
+     * @return
+     * @author: 肖超
+     * @date: 2019年4月17日
+     */
+    List<DictType> selectByName(@Param("name") String name, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
-	/**
-	 * code查询
-	 * 
-	 * @param code
-	 * @return
-	 * @author: 肖超
-	 * @date: 2019年4月17日
-	 */
-	DictType selectByCode(@Param("code") String code);
+    DictType selectById(@Param("id") Integer id);
+
+	DictType selectByCode(@Param("code")String code);
 }

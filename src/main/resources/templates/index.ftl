@@ -26,7 +26,7 @@
     <div style="float:right;">
         <div class="header-dropdown">
             <a class="header-dropdown-toggle">
-                <strong></strong><em>${ssoUser.userName}</em><i></i>
+                <strong></strong><em>${ssoUser.name}</em><i></i>
             </a>
             <ul class="header-dropdown-menu">
                 <li><a class="my-pwd toEditPassword" href="javascript:void(0)"><i class="glyphicon glyphicon-edit"></i><em>修改密码</em></a></li>
