@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2021-07-02 18:47:29
+-- 生成日期： 2021-07-09 09:57:19
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -177,15 +177,34 @@ CREATE TABLE `rule` (
   `update_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `create_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `rule_collection_id` int(11) DEFAULT NULL,
+  `param_json` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 转存表中的数据 `rule`
 --
 
-INSERT INTO `rule` (`id`, `name`, `type`, `sort`, `expression_json_list`, `executive_logic`, `action_json_list`, `aggregat_id`, `expect_return_class`, `status`, `update_by`, `create_by`, `create_time`, `update_time`) VALUES
-(1, '111', NULL, 0, '[{\"left\":\"namexc_returt\",\"operation\":\"!=\",\"right\":\"1\"},{\"left\":\"msg\",\"operation\":\"==\",\"right\":\"100\"}]', '#1&&#2', '[{\"topic\":\"xiaochao\",\"message\":\"fdafdsaf\"}]', 4, 'java.lang.Boolean', 1, 'string', 'string', '2021-06-29 22:32:31', '2021-07-02 17:02:37');
+INSERT INTO `rule` (`id`, `name`, `type`, `sort`, `expression_json_list`, `executive_logic`, `action_json_list`, `aggregat_id`, `expect_return_class`, `status`, `update_by`, `create_by`, `create_time`, `update_time`, `rule_collection_id`, `param_json`) VALUES
+(1, '111', NULL, 0, '[{\"left\":\"namexc_returt\",\"operation\":\"!=\",\"right\":\"1\"},{\"left\":\"msg\",\"operation\":\"==\",\"right\":\"100\"}]', 'deliveryType<2', '[{\"topic\":\"xiaochao\",\"message\":\"fdafdsaf\"}]', 4, 'java.lang.Boolean', 1, 'string', 'string', '2021-06-29 22:32:31', '2021-07-05 18:36:34', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `rule_collection`
+--
+
+CREATE TABLE `rule_collection` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` tinyint(4) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `update_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_by` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 转储表的索引
