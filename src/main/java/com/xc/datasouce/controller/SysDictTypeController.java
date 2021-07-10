@@ -3,6 +3,7 @@ package com.xc.datasouce.controller;
 import com.xc.config.WebResponse;
 import com.xc.datasouce.service.DictService;
 import com.xc.po.DictType;
+import com.xc.vo.PageVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 数据字典类型维护
@@ -124,7 +127,11 @@ public class SysDictTypeController {
             Model model
     ) {
         logger.info("-----------查询数据字典类型列表");
-        model.addAttribute("sysDictTypeList", dictService.selectTypeByName(name, pageNum, pageSize));
+        List<DictType> o = dictService.selectTypeByName(name, pageNum, pageSize);
+        PageVo pageVo= new PageVo();
+        pageVo.setList(o);
+        pageVo.setTotal(50);
+        model.addAttribute("sysDictTypeList", pageVo);
         return "/datadictionary/dict-listpage";
     }
 

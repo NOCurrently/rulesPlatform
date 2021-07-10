@@ -1,6 +1,5 @@
 package com.xc.datasouce.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,18 +48,18 @@ public class DictService {
         return dictValueMapper.insertSelective(dictValue);
     }
 
-    public List<DictType> selectTypeByName(String name,Integer pageNum,Integer pageSize) {
-        List<DictType> dictType = dictTypeMapper.selectByName(name,pageNum,pageSize);
+    public List<DictType> selectTypeByName(String name, Integer pageNum, Integer pageSize) {
+        List<DictType> dictType = dictTypeMapper.selectByName(name, (pageNum - 1) * pageSize, pageSize);
         if (dictType == null) {
             return new ArrayList<>(0);
         }
         return dictType;
     }
+
     public DictType selectTypeId(Integer id) {
         DictType dictType = dictTypeMapper.selectById(id);
         return dictType;
     }
-
 
     /**
      * @param dictType

@@ -180,4 +180,7 @@ public class CommonUtils {
         return list;
     }
 
+    public static String getUUID() {
+        return UUID.randomUUID().toString();
+    }
 }

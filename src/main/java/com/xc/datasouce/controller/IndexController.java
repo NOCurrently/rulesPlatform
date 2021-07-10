@@ -1,9 +1,13 @@
 package com.xc.datasouce.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.xc.config.LoginInterceptor;
 import com.xc.config.WebResponse;
 import com.xc.po.UserDO;
+import com.xc.until.CommonUtils;
+import com.xc.until.CookieUtil;
 import com.xc.vo.ResourceTree;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/web")
+@Slf4j
 public class IndexController {
 
     @RequestMapping("/index")
@@ -45,7 +50,7 @@ public class IndexController {
         List<ResourceTree> resourceTreesVOVo = new ArrayList<>();
         resourceTreesVOVo.add(filterTrees);
         UserDO userDO = new UserDO();
-        userDO.setName("xiaochao");
+        userDO.setUsername("xiaochao");
         model.addAttribute("ssoUser", userDO);
         model.addAttribute("resourceTrees", resourceTreesVOVo);
         return "/index";
@@ -54,6 +59,12 @@ public class IndexController {
     @PostMapping("/userLogin")
     @ResponseBody
     public WebResponse userLogin(UserDO sysUserVo, HttpServletRequest request, HttpServletResponse response) {
+        log.error(sysUserVo.toString());
+        if (sysUserVo!=null&&sysUserVo.getUsername()!=null){
+            String uuid = CommonUtils.getUUID();
+            CookieUtil.writeCookie(response, LoginInterceptor.TOKEN_KEY, uuid, "/", 30 * 24 * 60 * 60 * 1000);
+            LoginInterceptor.session.put(uuid,sysUserVo);
+        }
         return WebResponse.succeed(null);
     }
 }

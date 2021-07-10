@@ -34,7 +34,7 @@ public class SsoFilter extends HttpServlet implements Filter {
             String auth = req.getHeader("auth");
             if (StringUtils.isNotBlank(auth)) {
                 UserDO user = new UserDO();
-                user.setName(auth);
+                user.setUsername(auth);
                 sThreadLocal.set(user);
                 chain.doFilter(request, response);
                 return;

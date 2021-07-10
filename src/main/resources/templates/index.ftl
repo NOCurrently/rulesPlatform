@@ -26,7 +26,7 @@
     <div style="float:right;">
         <div class="header-dropdown">
             <a class="header-dropdown-toggle">
-                <strong></strong><em>${ssoUser.name}</em><i></i>
+                <strong></strong><em>${ssoUser.username}</em><i></i>
             </a>
             <ul class="header-dropdown-menu">
                 <li><a class="my-pwd toEditPassword" href="javascript:void(0)"><i class="glyphicon glyphicon-edit"></i><em>修改密码</em></a></li>
@@ -71,7 +71,7 @@
                 <div role="tabpanel" class="tab-pane active">
                     <div class="am-container" style="min-height: 800px">
                         <div class="jumbotron">
-                            <h2>欢迎来到OYO内容投放管理平台</h2>
+                            <h2>欢迎来到管理平台</h2>
                         </div>
                     </div>
                 </div>

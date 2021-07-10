@@ -17,6 +17,6 @@ public class SsoUtil {
         if (user == null) {
             return null;
         }
-        return user.getName();
+        return user.getUsername();
     }
 }

@@ -11,14 +11,14 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>名称</label>
                     <div class="col-sm-9">
-                    ${dictTypeResponse.name}
-                        <input type="hidden" class="form-control" id="editname" name="name" value="${dictTypeResponse.name}" placeholder="名称">
+                        <input type="text" class="form-control" id="editname" name="name" value="${dictTypeResponse.name}" placeholder="名称">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>编码</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="editcode" name="code" value="${dictTypeResponse.code}" placeholder="编码">
+                        ${dictTypeResponse.code}
+                        <input type="hidden" class="form-control" id="editcode" name="code" value="${dictTypeResponse.code}" placeholder="编码">
                     </div>
                 </div>
                 <div class="form-group">
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger"></strong>备注</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="editremark" name="remark" value="${dictTypeResponse.remark}" placeholder="备注">
+                        <input type="text" class="form-control" id="editremark" name="remarks" value="${dictTypeResponse.remarks!}" placeholder="备注">
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
 
       //提交成功后
       function dictTypeComplete(data){
-          if (data.code=='200'){
+          if (data.code=='0'){
               //关闭当前窗口
               $("#modifyDictTypeModel").modal('hide');
 
