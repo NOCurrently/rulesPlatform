@@ -3,12 +3,12 @@
 
         <table class="am-table am-table-bordered am-table-hover am-table-striped am-table-compact">
             <thead>
-            <tr>
+            <tr >
                 <th nowrap="nowrap" style="width: 5%;">名称</th>
                 <th nowrap="nowrap" style="width: 5%;">值</th>
                 <th nowrap="nowrap" style="width: 10%;">排序</th>
                 <th nowrap="nowrap" style="width: 5%;">备注</th>
-                <th nowrap="nowrap" style="width: 5%;">操作</th>
+                <th nowrap="nowrap" style="width: 10%;">操作</th>
             </tr>
             </thead>
 
