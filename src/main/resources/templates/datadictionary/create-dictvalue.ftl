@@ -13,19 +13,19 @@
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>类型编码</label>
                     <div class="col-sm-9">
                     ${dictTypeResponse.code}
-                        <input type="hidden" class="form-control" id="dictTypeCode" name="dictTypeCode" value="${dictTypeResponse.code}" placeholder="数据字典类型编码">
+                        <input type="hidden" class="form-control" id="dictTypeCode" name="typeCode" value="${dictTypeResponse.code}" placeholder="数据字典类型编码">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>值</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="value" name="value" placeholder="值">
+                        <input type="text" class="form-control" id="value" name="valueStr" placeholder="值">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger">*</strong>显示值</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="labelDefault" name="labelDefault" placeholder="显示值">
+                        <input type="text" class="form-control" id="labelDefault" name="name" placeholder="显示值">
                     </div>
                 </div>
                 <div class="form-group">
@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-3 control-label"><strong class="text-danger"></strong>备注</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="remark" name="remark" placeholder="备注">
+                        <input type="text" class="form-control" id="remark" name="remarks" placeholder="备注">
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
 
     //提交成功后调用
     function dictValueComplete(data){
-        if (data.code== "200"){
+        if (data.code== "0"){
         	$("#createDictValueModel").modal('hide');
         } else {
         	$('#dictValue_result').html(data.errorMessage).show();

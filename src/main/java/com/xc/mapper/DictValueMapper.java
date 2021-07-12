@@ -46,6 +46,15 @@ public interface DictValueMapper {
 	 * @return
 	 */
 	List<DictValue> selectByTypeCode(@Param("code") String code);
+	/**
+	 * 类型id查找
+	 *
+	 * @author: 肖超
+	 * @date: 2019年4月17日
+	 * @param typeId
+	 * @return
+	 */
+	DictValue selectById(@Param("id") Integer id);
 
 
 

@@ -49,4 +49,6 @@ public interface DictTypeMapper {
     DictType selectById(@Param("id") Integer id);
 
 	DictType selectByCode(@Param("code")String code);
+
+    Integer selectTypeNumByName(@Param("name")String name);
 }

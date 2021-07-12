@@ -32,7 +32,6 @@ public class SysDictTypeController {
     @Autowired
     private DictService dictService;
 
-
     /**
      * 新增数据字典类型
      *
@@ -43,10 +42,14 @@ public class SysDictTypeController {
     WebResponse addSysDictType(DictType sysDictType) {
         if (sysDictType != null && !StringUtils.isEmpty(sysDictType.getName()) && !StringUtils.isEmpty(sysDictType.getCode())) {
             //通过一切校验，添加数据字典类型
-            dictService.insertType(sysDictType);
-            return WebResponse.succeed(null);
+            try {
+                dictService.insertType(sysDictType);
+            } catch (Exception e) {
+                return WebResponse.fail("2", e.getMessage());
+            }
+
         }
-        return WebResponse.fail("3", "添加失败");
+        return WebResponse.succeed(null);
     }
 
     /**
@@ -128,9 +131,10 @@ public class SysDictTypeController {
     ) {
         logger.info("-----------查询数据字典类型列表");
         List<DictType> o = dictService.selectTypeByName(name, pageNum, pageSize);
-        PageVo pageVo= new PageVo();
+        int i = dictService.selectTypeNumByName(name);
+        PageVo pageVo = new PageVo();
         pageVo.setList(o);
-        pageVo.setTotal(50);
+        pageVo.setTotal(i);
         model.addAttribute("sysDictTypeList", pageVo);
         return "/datadictionary/dict-listpage";
     }

@@ -34,11 +34,11 @@ public class WebResponse {
 
     public static WebResponse fail(String code, String displayMessage, Object data) {
 
-        return execute(code, displayMessage, null, data);
+        return execute(code, displayMessage, displayMessage, data);
     }
 
     public static WebResponse fail(String code, String displayMessage) {
-        return execute(code, displayMessage, null, null);
+        return execute(code, displayMessage, displayMessage, null);
     }
 
     private static WebResponse execute(String code, String displayMessage, String errorMessage, Object data) {
@@ -48,7 +48,7 @@ public class WebResponse {
 
 
     public static WebResponse succeed(String displayMessage, Object data) {
-        return execute("0", displayMessage, null, data);
+        return execute("0", displayMessage, displayMessage, data);
 
     }
 

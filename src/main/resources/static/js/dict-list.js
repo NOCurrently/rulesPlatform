@@ -57,7 +57,7 @@ $(function () {
 
     //提交成功后
     function dictTypeComplete(data){
-        if (data.code=='200'){
+        if (data.code=='0'){
             //关闭当前窗口
             $("#createDictTypeModel").modal('hide');
 
@@ -125,7 +125,7 @@ $(function () {
             url: path + "/sysDictType/deleteSysDictType?id=" + dictTypeId,
             format: "json",
             success: function (data) {
-                if ($.trim(data.code) != "200") {
+                if ($.trim(data.code) != "0") {
                     alert(data.errorMessage);
                 } else {
                     var keyword = $(".search-input").val();
@@ -186,7 +186,7 @@ $(function () {
             url: path + "/sysDictValue/deleteSysDictValue?id=" + dictValueId,
             format: "json",
             success: function (data) {
-                if ($.trim(data.code) != "200") {
+                if ($.trim(data.code) != "0") {
                     alert(data.errorMessage);
                 } else {
 

@@ -37,12 +37,12 @@ public class IndexController {
     public String index(Model model) {
         ResourceTree filterTrees = new ResourceTree();
         filterTrees.setId(1);
-        filterTrees.setName("12");
+        filterTrees.setName("系统设置");
         filterTrees.setIcon("fad");
         List<ResourceTree> second = new ArrayList<>();
         ResourceTree seconds = new ResourceTree();
         seconds.setId(2);
-        seconds.setName("12");
+        seconds.setName("数据字典");
         seconds.setIcon("fad");
         seconds.setUrl("/sysDictType/dictList");
         second.add(seconds);

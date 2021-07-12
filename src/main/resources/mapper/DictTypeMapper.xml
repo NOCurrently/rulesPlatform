@@ -29,6 +29,15 @@
     </if>
     limit #{pageNum} , #{pageSize}
   </select>
+  <select id="selectTypeNumByName"  resultType="java.lang.Integer">
+    select
+    count(id)
+    from dict_type
+    where  status = 1
+    <if test="name != null">
+      and name like CONCAT(#{name,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
   <select id="selectById"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

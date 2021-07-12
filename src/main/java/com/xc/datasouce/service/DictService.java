@@ -38,22 +38,15 @@ public class DictService {
         return dictTypeMapper.insertSelective(dictType);
     }
 
-    /**
-     * @param dictValue
-     * @return
-     * @author: 肖超
-     * @date: 2019年4月17日
-     */
-    public int insertValue(DictValue dictValue) {
-        return dictValueMapper.insertSelective(dictValue);
-    }
-
     public List<DictType> selectTypeByName(String name, Integer pageNum, Integer pageSize) {
         List<DictType> dictType = dictTypeMapper.selectByName(name, (pageNum - 1) * pageSize, pageSize);
         if (dictType == null) {
             return new ArrayList<>(0);
         }
         return dictType;
+    }
+    public int selectTypeNumByName(String name) {
+        return dictTypeMapper.selectTypeNumByName(name);
     }
 
     public DictType selectTypeId(Integer id) {
@@ -77,8 +70,35 @@ public class DictService {
      * @author: 肖超
      * @date: 2019年4月17日
      */
+    public int insertValue(DictValue dictValue) {
+        return dictValueMapper.insertSelective(dictValue);
+    }
+
+    /**
+     * @param dictValue
+     * @return
+     * @author: 肖超
+     * @date: 2019年4月17日
+     */
     public int updateValue(DictValue dictValue) {
         return dictValueMapper.updateByPrimaryKeySelective(dictValue);
     }
 
+    public List<DictValue> selectValueByTypeId(Integer typeId) {
+        DictType dictType = dictTypeMapper.selectById(typeId);
+        if (dictType != null) {
+            List<DictValue> dictValues = dictValueMapper.selectByTypeCode(dictType.getCode());
+            return dictValues;
+        }
+        return new ArrayList<>(0);
+
+    }
+    public List<DictValue> selectValueByTypeCode(String code) {
+            List<DictValue> dictValues = dictValueMapper.selectByTypeCode(code);
+            return dictValues;
+    }
+
+    public DictValue selecByValueId(Integer id) {
+        return dictValueMapper.selectById(id);
+    }
 }

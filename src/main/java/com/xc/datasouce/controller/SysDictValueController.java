@@ -1,12 +1,8 @@
-/*
 package com.xc.datasouce.controller;
 
-import com.oyo.cms.back.service.configmanager.SysDictValueService;
-import com.oyo.cms.common.base.RopCode;
-import com.oyo.cms.common.base.RopResponse;
-import com.oyo.cms.common.configmanager.datadictionary.bean.SysDictValue;
-import com.oyo.cms.common.configmanager.datadictionary.vo.SysDictValueVO;
+import com.xc.config.WebResponse;
 import com.xc.datasouce.service.DictService;
+import com.xc.po.DictValue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.List;
 
-*/
-/**
- * 数据字典值维护
- *
- * @author dengqz
- *//*
-
 @Controller
 @RequestMapping("/sysDictValue")
 public class SysDictValueController {
@@ -38,85 +27,72 @@ public class SysDictValueController {
 
     @RequestMapping(value = "/listSysDictValue")
     public String listSysDictValue(
-            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "id", required = false) Integer id, @RequestParam(value = "code", required = false) String code,
             Model model
     ) {
         logger.info("-----------查询数据字典值列表");
-        model.addAttribute("sysDictValueList", sysDictValueService.listSysDictValue(id));
+        if (id != null) {
+            List<DictValue> o = dictService.selectValueByTypeId(id);
+            model.addAttribute("sysDictValueList", o);
+        } else {
+            List<DictValue> o = dictService.selectValueByTypeCode(code);
+            model.addAttribute("sysDictValueList", o);
+        }
+
         return "/datadictionary/dictvalue-list";
     }
 
-    @RequestMapping("/getSysDictValue")
-    public SysDictValue getSysDictValue(Integer id) {
-        return sysDictValueService.getSysDictValue(id);
-    }
+   /* @RequestMapping("/getSysDictValue")
+    public DictValue getSysDictValue(Integer id) {
+        return dictService.selecByValueId(id);
+    }*/
 
     @RequestMapping("/addSysDictValue")
     public @ResponseBody
-    RopResponse<SysDictValueVO> addSysDictValue(SysDictValue sysDictValue) {
-        return sysDictValueService.addSysDictValue(sysDictValue);
+    WebResponse addSysDictValue(DictValue sysDictValue) {
+        int i = dictService.insertValue(sysDictValue);
+        return WebResponse.succeed(i);
     }
 
     @RequestMapping("/updateSysDictValue")
     public @ResponseBody
-    RopResponse<SysDictValueVO> updateSysDictValue(SysDictValueVO sysDictValueVO) {
+    WebResponse updateSysDictValue(DictValue sysDictValueVO) {
 
         if (sysDictValueVO != null) {
             //TODO 校验value唯一约束
-            sysDictValueService.updateSysDictValue(sysDictValueVO);
-            return RopResponse.success(null, "修改成功");
+            dictService.updateValue(sysDictValueVO);
         }
-        return RopResponse.error(RopCode.ERROR.getCode(), "修改失败");
+        return WebResponse.succeed(null);
     }
 
     @RequestMapping("/deleteSysDictValue")
     public @ResponseBody
-    RopResponse<SysDictValueVO> deleteSysDictValue(@RequestParam("id") Integer id) {
-        return sysDictValueService.deleteSysDictValue(id);
+    WebResponse deleteSysDictValue(@RequestParam("id") Integer id) {
+        DictValue sysDictValueVO = new DictValue();
+        sysDictValueVO.setId(id);
+        sysDictValueVO.setStatus(0);
+        dictService.updateValue(sysDictValueVO);
+        return WebResponse.succeed(null);
     }
 
     @RequestMapping(value = "/editDictValue")
     public String selectDictValueById(@RequestParam(value = "id", required = false) Integer id, Model model) {
-        SysDictValue sysDictValue = new SysDictValue();
         if (id != null) {
-            sysDictValue = sysDictValueService.getSysDictValue(id);
+            DictValue sysDictValue = dictService.selecByValueId(id);
+            model.addAttribute("dictValueResponse", sysDictValue);
         }
-        model.addAttribute("dictValueResponse", sysDictValue);
         model.addAttribute("option", "edit");
         return "/datadictionary/edit-dictvalue";
     }
 
-    */
-/**
-     * 通过DictTypeCode查询对应的类型数据
-     *
-     * @param sysDictValueVO
-     * @return
-     *//*
-
     @RequestMapping(value = "/getDictValueByDictTypeCode")
     @ResponseBody
-    public List<SysDictValueVO> getDictValueByDictTypeCode(SysDictValueVO sysDictValueVO) {
-        if (sysDictValueVO != null && StringUtils.isNotEmpty(sysDictValueVO.getDictTypeCode())) {
-            return sysDictValueService.getDicValueListByTypeCode(sysDictValueVO);
+    public List<DictValue> getDictValueByDictTypeCode(String code) {
+        if (StringUtils.isNotEmpty(code)) {
+            return dictService.selectValueByTypeCode(code);
         }
         //防止前端循环报错
-        return new ArrayList<SysDictValueVO>();
+        return new ArrayList<>();
     }
 
-    @RequestMapping(value = "/getDictValueByParam")
-    @ResponseBody
-    public List<SysDictValueVO> getDictValueByParam(String dictTypeCode, String remark) {
-        SysDictValueVO sysDictValueVO = new SysDictValueVO();
-        if (sysDictValueVO != null && StringUtils.isNotEmpty(dictTypeCode)) {
-            sysDictValueVO.setDictTypeCode(dictTypeCode);
-            if (StringUtils.isNotBlank(remark)) {
-                sysDictValueVO.setRemark(remark);
-            }
-            return sysDictValueService.getDicValueListByTypeCode(sysDictValueVO);
-        }
-        //防止前端循环报错
-        return new ArrayList<SysDictValueVO>();
-    }
 }
-*/

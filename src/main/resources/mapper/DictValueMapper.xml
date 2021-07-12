@@ -24,6 +24,11 @@
         from dict_value where type_code = #{code,jdbcType=VARCHAR} and status=1
         order by sort asc
     </select>
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from dict_value where id = #{id} and status=1
+    </select>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.xc.po.DictValue">
         update dict_value
